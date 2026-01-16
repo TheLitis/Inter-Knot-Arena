@@ -4,11 +4,10 @@ import type { ReactNode } from "react";
 const navItems = [
   { to: "/", label: "Home" },
   { to: "/leaderboards", label: "Leaderboards" },
+  { to: "/players", label: "Players" },
+  { to: "/agents", label: "Agents" },
+  { to: "/rulesets", label: "Rulesets" },
   { to: "/profile/user_ellen", label: "Profile" },
-  { to: "/match/match_demo", label: "Match Room" },
-  { to: "/uid-verify", label: "UID Verify" },
-  { to: "/roster", label: "Roster" },
-  { to: "/disputes", label: "Disputes" },
   { to: "/admin", label: "Admin" }
 ];
 
@@ -41,7 +40,7 @@ export default function Shell({ children }: ShellProps) {
           ))}
         </nav>
         <div className="nav-cta">
-          <button className="primary-button">Join Queue</button>
+          <button className="primary-button">Browse Catalog</button>
         </div>
       </header>
       <main className="app-main">{children}</main>

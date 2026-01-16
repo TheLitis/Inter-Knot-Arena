@@ -1,58 +1,64 @@
-import { useEffect, useState } from "react";
-import type { QueueConfig } from "@ika/shared";
-import { fetchQueues } from "../api";
+import { useEffect, useMemo, useState } from "react";
+import type { Agent, Rating, Ruleset, User } from "@ika/shared";
+import { fetchAgents, fetchLeaderboard, fetchRulesets, fetchUsers } from "../api";
 
 export default function Home() {
-  const [queues, setQueues] = useState<QueueConfig[]>([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [rulesets, setRulesets] = useState<Ruleset[]>([]);
+  const [leaders, setLeaders] = useState<Rating[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    fetchQueues().then(setQueues);
+    fetchAgents().then(setAgents);
+    fetchRulesets().then(setRulesets);
+    fetchLeaderboard("league_standard").then((ratings) => setLeaders(ratings.slice(0, 3)));
+    fetchUsers().then(setUsers);
   }, []);
+
+  const userMap = useMemo(() => new Map(users.map((user) => [user.id, user.displayName])), [users]);
 
   return (
     <div className="page">
       <section className="hero">
         <div className="hero-content fade-up">
           <p className="eyebrow">Inter-Knot Arena</p>
-          <h1>Compete on your client. Prove it on the platform.</h1>
+          <h1>Profiles, leaderboards, and catalogs for competitive ZZZ.</h1>
           <p className="lead">
-            Structured drafts, verifier-backed checks, and visible ELO across
-            F2P, Standard, and Unlimited leagues. Build trust with evidence,
-            climb with clean wins.
+            MVP-0 delivers public player profiles, league tables, and a shared
+            agent and ruleset catalog. Ranked match flow arrives in the next
+            milestone.
           </p>
           <div className="hero-actions">
-            <button className="primary-button">Enter Matchmaking</button>
-            <button className="ghost-button">See Rulesets</button>
+            <button className="primary-button">Browse leaderboards</button>
+            <button className="ghost-button">Open catalog</button>
           </div>
           <div className="hero-metrics">
             <div>
-              <div className="metric-value">3</div>
-              <div className="metric-label">Leagues</div>
+              <div className="metric-value">{users.length}</div>
+              <div className="metric-label">Profiles</div>
             </div>
             <div>
-              <div className="metric-value">12</div>
-              <div className="metric-label">Live Challenges</div>
+              <div className="metric-value">{agents.length}</div>
+              <div className="metric-label">Agents</div>
             </div>
             <div>
-              <div className="metric-value">90s</div>
-              <div className="metric-label">Draft Window</div>
+              <div className="metric-value">{rulesets.length}</div>
+              <div className="metric-label">Rulesets</div>
             </div>
           </div>
         </div>
         <div className="hero-panel fade-up">
           <div className="panel-card">
-            <div className="panel-title">Current Season</div>
+            <div className="panel-title">Season status</div>
             <div className="panel-value">Season 01</div>
-            <div className="panel-sub">Active · 60 days left</div>
+            <div className="panel-sub">Active - 60 days left</div>
             <div className="panel-list">
               <div>
-                <span className="tag">Verifier</span>
-                <span className="tag">Draft</span>
-                <span className="tag">ELO</span>
+                <span className="tag">Profiles</span>
+                <span className="tag">Leaderboards</span>
+                <span className="tag">Catalog</span>
               </div>
-              <p>
-                Ranked queues require UID verification and verifier pre-checks.
-              </p>
+              <p>Rulesets remain data-driven and versioned.</p>
             </div>
           </div>
         </div>
@@ -60,64 +66,65 @@ export default function Home() {
 
       <section className="section">
         <div className="section-header">
-          <h2>Queues ready for deployment</h2>
-          <p>Structured by league and ruleset for clean competition.</p>
+          <h2>Leaderboard snapshot</h2>
+          <p>Top standard league standings from the current season.</p>
         </div>
-        <div className="grid stagger">
-          {queues.map((queue) => (
-            <div key={queue.id} className="card">
+        <div className="grid">
+          {leaders.map((leader, index) => (
+            <div key={leader.userId} className="card">
               <div className="card-header">
-                <h3>{queue.name}</h3>
-                <span className={queue.requireVerifier ? "badge" : "badge-outline"}>
-                  {queue.requireVerifier ? "Verifier" : "Open"}
-                </span>
+                <h3>#{index + 1}</h3>
+                <span className="badge">{leader.elo} ELO</span>
               </div>
-              <p>{queue.description}</p>
-              <div className="card-footer">
-                <div>
-                  <div className="meta-label">League</div>
-                  <div className="meta-value">{queue.leagueId.replace("league_", "")}</div>
-                </div>
-                <div>
-                  <div className="meta-label">Ruleset</div>
-                  <div className="meta-value">{queue.rulesetId.replace("ruleset_", "")}</div>
-                </div>
+              <p>{userMap.get(leader.userId) ?? leader.userId}</p>
+              <div className="meta-label">Standard league</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section-header">
+          <h2>Agents catalog</h2>
+          <p>Core roster available for drafts and ruleset checks.</p>
+        </div>
+        <div className="grid">
+          {agents.slice(0, 4).map((agent) => (
+            <div key={agent.id} className="card">
+              <div className="card-header">
+                <h3>{agent.name}</h3>
+                <span className="badge-outline">{agent.role}</span>
+              </div>
+              <div className="chip-row">
+                <span className="tag">{agent.element}</span>
+                <span className="tag">{agent.faction}</span>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="section split">
-        <div>
-          <h2>How a ranked match is validated</h2>
-          <p>
-            No API access. No memory hooks. Only screen evidence and strict match
-            states.
-          </p>
+      <section className="section">
+        <div className="section-header">
+          <h2>Ruleset cards</h2>
+          <p>League enforcement policy, versioned and visible.</p>
         </div>
-        <div className="steps">
-          <div className="step">
-            <div className="step-index">01</div>
-            <div>
-              <h4>Draft on the platform</h4>
-              <p>Bans and picks are locked before the run begins.</p>
+        <div className="grid">
+          {rulesets.map((ruleset) => (
+            <div key={ruleset.id} className="card">
+              <div className="card-header">
+                <h3>{ruleset.name}</h3>
+                <span className={ruleset.requireVerifier ? "badge" : "badge-outline"}>
+                  {ruleset.requireVerifier ? "Verifier" : "Open"}
+                </span>
+              </div>
+              <p>{ruleset.description}</p>
+              <div className="chip-row">
+                <span className="tag">{ruleset.leagueId.replace("league_", "")}</span>
+                <span className="tag">{ruleset.version}</span>
+              </div>
             </div>
-          </div>
-          <div className="step">
-            <div className="step-index">02</div>
-            <div>
-              <h4>Verifier pre-check</h4>
-              <p>Screen capture confirms the drafted agents.</p>
-            </div>
-          </div>
-          <div className="step">
-            <div className="step-index">03</div>
-            <div>
-              <h4>Result proof</h4>
-              <p>Submit result screens or video for final confirmation.</p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
     </div>
