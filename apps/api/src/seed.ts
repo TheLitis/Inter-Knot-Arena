@@ -229,10 +229,24 @@ export const ratings: Rating[] = [
     updatedAt: now
   },
   {
+    userId: "user_ellen",
+    leagueId: "league_f2p",
+    elo: 1402,
+    provisionalMatches: 9,
+    updatedAt: now
+  },
+  {
     userId: "user_lycaon",
     leagueId: "league_standard",
     elo: 1490,
     provisionalMatches: 8,
+    updatedAt: now
+  },
+  {
+    userId: "user_lycaon",
+    leagueId: "league_unlimited",
+    elo: 1705,
+    provisionalMatches: 15,
     updatedAt: now
   },
   {
