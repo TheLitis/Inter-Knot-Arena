@@ -205,9 +205,18 @@ export function recordPrecheck(match: Match, record: Match["evidence"]["precheck
 export function recordInrun(match: Match, record: Match["evidence"]["inrun"][number]): void {
   match.evidence.inrun.push(record);
   match.updatedAt = now();
+  if (match.state === "READY_TO_START") {
+    transitionMatch(match, "IN_PROGRESS");
+  }
 }
 
 export function recordResult(match: Match, result: Match["evidence"]["result"]): void {
+  if (match.state === "READY_TO_START") {
+    transitionMatch(match, "IN_PROGRESS");
+  }
+  if (match.state === "IN_PROGRESS") {
+    transitionMatch(match, "AWAITING_RESULT_UPLOAD");
+  }
   match.evidence.result = result ?? undefined;
   match.updatedAt = now();
   if (match.state === "AWAITING_RESULT_UPLOAD") {
