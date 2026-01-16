@@ -220,6 +220,11 @@ export interface Rating {
   updatedAt: number;
 }
 
+export interface ProfileSummary {
+  user: User;
+  ratings: Rating[];
+}
+
 export type SeasonStatus = "PLANNED" | "ACTIVE" | "ENDED";
 
 export interface Season {

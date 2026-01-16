@@ -5,6 +5,7 @@ import type {
   League,
   Match,
   MatchState,
+  ProfileSummary,
   QueueConfig,
   Rating,
   Ruleset,
@@ -73,6 +74,29 @@ export function findRuleset(rulesetId: string): Ruleset {
     throw new Error("Ruleset not found");
   }
   return ruleset;
+}
+
+export function listUsers(): User[] {
+  return store.users;
+}
+
+export function findUser(userId: string): User {
+  const user = store.users.find((item) => item.id === userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  return user;
+}
+
+export function getUserRatings(userId: string): Rating[] {
+  return store.ratings.filter((item) => item.userId === userId);
+}
+
+export function getProfileSummary(userId: string): ProfileSummary {
+  return {
+    user: findUser(userId),
+    ratings: getUserRatings(userId)
+  };
 }
 
 export function findMatch(matchId: string): Match {
