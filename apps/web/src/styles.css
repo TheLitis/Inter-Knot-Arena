@@ -1,20 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 
 :root {
-  --bg-900: #0b0d12;
-  --bg-800: #10141b;
-  --bg-700: #161b24;
-  --ink-900: #f4efe7;
-  --ink-700: #c9c3bb;
-  --ink-500: #9aa3ad;
-  --accent-600: #e05a2b;
-  --accent-400: #f2a446;
-  --steel-600: #2a8fa3;
-  --card: rgba(18, 22, 30, 0.85);
-  --card-solid: #141922;
-  --border: rgba(244, 239, 231, 0.08);
-  --shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
-  --shadow-soft: 0 14px 28px rgba(0, 0, 0, 0.3);
+  --bg-900: #0b0f14;
+  --bg-800: #111720;
+  --bg-700: #18212c;
+  --ink-900: #f2f4f7;
+  --ink-700: #c3c8d2;
+  --ink-500: #8c96a8;
+  --accent-600: #e36b3a;
+  --accent-400: #f2a65a;
+  --steel-600: #3a95a9;
+  --card: rgba(18, 22, 30, 0.75);
+  --card-solid: #141a23;
+  --border: rgba(242, 244, 247, 0.08);
+  --shadow: 0 18px 36px rgba(0, 0, 0, 0.4);
+  --shadow-soft: 0 12px 24px rgba(0, 0, 0, 0.25);
 }
 
 * {
@@ -28,10 +28,8 @@ body {
   line-height: 1.6;
   background-color: var(--bg-900);
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(224, 90, 43, 0.25), transparent 55%),
-    radial-gradient(circle at 85% 10%, rgba(42, 143, 163, 0.18), transparent 45%),
-    repeating-linear-gradient(135deg, rgba(244, 239, 231, 0.03) 0 1px, transparent 1px 14px),
-    linear-gradient(140deg, var(--bg-900), var(--bg-700));
+    radial-gradient(circle at 20% 10%, rgba(227, 107, 58, 0.12), transparent 55%),
+    linear-gradient(160deg, var(--bg-900), var(--bg-700));
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -61,8 +59,8 @@ a {
 
 label {
   font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0.02em;
   color: var(--ink-500);
 }
 
