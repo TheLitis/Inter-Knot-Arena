@@ -55,6 +55,10 @@ export default function Rulesets() {
                 <div className="meta-label">Result</div>
                 <div className="meta-value">{ruleset.evidencePolicy.retentionDays.result} days</div>
               </div>
+              <div>
+                <div className="meta-label">Max level</div>
+                <div className="meta-value">{ruleset.levelCaps?.agentLevel ?? 60}</div>
+              </div>
             </div>
           </div>
         ))}

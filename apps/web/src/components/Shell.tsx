@@ -1,14 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
+import SearchBar from "./SearchBar";
 
 const navItems = [
-  { to: "/", label: "Home" },
   { to: "/matchmaking", label: "Matchmaking" },
   { to: "/leaderboards", label: "Leaderboards" },
-  { to: "/players", label: "Players" },
   { to: "/agents", label: "Agents" },
   { to: "/rulesets", label: "Rulesets" },
-  { to: "/disputes", label: "Disputes" },
   { to: "/admin", label: "Admin" }
 ];
 
@@ -17,6 +16,20 @@ interface ShellProps {
 }
 
 export default function Shell({ children }: ShellProps) {
+  const [language, setLanguage] = useState(() => {
+    if (typeof window === "undefined") {
+      return "ru";
+    }
+    return window.localStorage.getItem("ika:lang") ?? "ru";
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("ika:lang", language);
+      document.documentElement.lang = language;
+    }
+  }, [language]);
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -43,6 +56,14 @@ export default function Shell({ children }: ShellProps) {
           ))}
         </nav>
         <div className="header-actions">
+          <SearchBar />
+          <label className="lang-select">
+            <span>Language</span>
+            <select value={language} onChange={(event) => setLanguage(event.target.value)}>
+              <option value="ru">RU</option>
+              <option value="en">EN</option>
+            </select>
+          </label>
           <div className="status-pill">
             <span className="status-dot" />
             Season 01
