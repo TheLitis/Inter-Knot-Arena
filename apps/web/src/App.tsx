@@ -2,6 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import Shell from "./components/Shell";
 import Home from "./pages/Home";
 import Leaderboards from "./pages/Leaderboards";
+import Players from "./pages/Players";
+import Agents from "./pages/Agents";
+import Rulesets from "./pages/Rulesets";
 import Profile from "./pages/Profile";
 import MatchRoom from "./pages/MatchRoom";
 import UidVerify from "./pages/UidVerify";
@@ -15,6 +18,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/leaderboards" element={<Leaderboards />} />
+        <Route path="/players" element={<Players />} />
+        <Route path="/agents" element={<Agents />} />
+        <Route path="/rulesets" element={<Rulesets />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/match/:id" element={<MatchRoom />} />
         <Route path="/uid-verify" element={<UidVerify />} />
