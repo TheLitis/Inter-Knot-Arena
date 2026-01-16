@@ -21,9 +21,9 @@ export default function Shell({ children }: ShellProps) {
     <div className="app-shell">
       <header className="app-header">
         <div className="brand">
-          <div className="brand-mark">
+          <Link className="brand-mark" to="/" title="Inter-Knot Arena">
             <img className="brand-logo" src="/logoIKA.png" alt="Inter-Knot Arena" />
-          </div>
+          </Link>
           <div>
             <div className="brand-title">Inter-Knot Arena</div>
             <div className="brand-subtitle">Competitive ZZZ platform</div>
