@@ -99,6 +99,7 @@ export const rulesets: Ruleset[] = [
     precheckFrequencySec: 5,
     inrunFrequencySec: 15,
     privacyMode: "MODE_B",
+    levelCaps: { agentLevel: 60 },
     dupesPolicy: { mode: "LIMIT", max: 1 },
     signaturePolicy: { mode: "DISALLOW" }
   },
@@ -146,7 +147,8 @@ export const rulesets: Ruleset[] = [
     },
     precheckFrequencySec: 5,
     inrunFrequencySec: 15,
-    privacyMode: "MODE_A"
+    privacyMode: "MODE_A",
+    levelCaps: { agentLevel: 60 }
   }
 ];
 
