@@ -4,9 +4,12 @@ import {
   applyDraftAction,
   confirmMatch,
   createMatchFromQueue,
+  findUser,
   findMatch,
   findRuleset,
   getActiveSeason,
+  getProfileSummary,
+  listUsers,
   listLeaderboard,
   openDispute,
   recordInrun,
@@ -33,6 +36,25 @@ export async function registerRoutes(app: FastifyInstance) {
   app.get("/challenges", async () => store.challenges);
   app.get("/queues", async () => store.queues);
   app.get("/seasons/current", async () => getActiveSeason());
+  app.get("/users", async () => listUsers());
+
+  app.get("/users/:id", async (request, reply) => {
+    try {
+      const userId = requireString((request.params as { id?: string }).id, "userId");
+      reply.send(findUser(userId));
+    } catch (error) {
+      sendError(reply, error);
+    }
+  });
+
+  app.get("/profiles/:id", async (request, reply) => {
+    try {
+      const userId = requireString((request.params as { id?: string }).id, "userId");
+      reply.send(getProfileSummary(userId));
+    } catch (error) {
+      sendError(reply, error);
+    }
+  });
 
   app.get("/leaderboards/:leagueId", async (request, reply) => {
     try {
