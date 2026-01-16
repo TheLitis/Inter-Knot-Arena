@@ -23,18 +23,17 @@ export default function Home() {
       <section className="hero">
         <div className="hero-content fade-up">
           <p className="eyebrow">Inter-Knot Arena</p>
-          <h1>Profiles, leaderboards, and catalogs for competitive ZZZ.</h1>
+          <h1>Matchmaking, draft, proofs, and disputes for competitive ZZZ.</h1>
           <p className="lead">
-            MVP-0 delivers public player profiles, league tables, and a shared
-            agent and ruleset catalog. Ranked match flow arrives in the next
-            milestone.
+            MVP-1 adds queue-based matchmaking, draft flow, and proof handling
+            while keeping leaderboards and catalogs visible.
           </p>
           <div className="hero-actions">
-            <Link className="primary-button" to="/leaderboards">
-              Browse leaderboards
+            <Link className="primary-button" to="/matchmaking">
+              Enter matchmaking
             </Link>
-            <Link className="ghost-button" to="/agents">
-              Open catalog
+            <Link className="ghost-button" to="/leaderboards">
+              View leaderboards
             </Link>
           </div>
           <div className="hero-metrics">

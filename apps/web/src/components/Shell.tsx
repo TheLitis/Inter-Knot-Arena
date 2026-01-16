@@ -3,10 +3,12 @@ import type { ReactNode } from "react";
 
 const navItems = [
   { to: "/", label: "Home" },
+  { to: "/matchmaking", label: "Matchmaking" },
   { to: "/leaderboards", label: "Leaderboards" },
   { to: "/players", label: "Players" },
   { to: "/agents", label: "Agents" },
   { to: "/rulesets", label: "Rulesets" },
+  { to: "/disputes", label: "Disputes" },
   { to: "/admin", label: "Admin" }
 ];
 
@@ -19,7 +21,9 @@ export default function Shell({ children }: ShellProps) {
     <div className="app-shell">
       <header className="app-header">
         <div className="brand">
-          <div className="brand-mark">IKA</div>
+          <div className="brand-mark">
+            <img className="brand-logo" src="/logoIKA.png" alt="Inter-Knot Arena" />
+          </div>
           <div>
             <div className="brand-title">Inter-Knot Arena</div>
             <div className="brand-subtitle">Competitive ZZZ platform</div>

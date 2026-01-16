@@ -96,14 +96,19 @@ label {
   width: 52px;
   height: 52px;
   border-radius: 14px;
-  background: linear-gradient(140deg, var(--accent-600), var(--accent-400));
-  color: #fff;
+  background: rgba(20, 25, 34, 0.8);
+  border: 1px solid var(--border);
   display: grid;
   place-items: center;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 26px;
-  letter-spacing: 1px;
   box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.brand-logo {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-title {
@@ -408,6 +413,20 @@ label {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.card-button {
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  background: var(--card-solid);
+  color: inherit;
+}
+
+.card-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
 .card::before {
   content: "";
   position: absolute;
@@ -699,6 +718,12 @@ label {
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
+}
+
+.timeline-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .timeline-step {

@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Shell from "./components/Shell";
 import Home from "./pages/Home";
+import Matchmaking from "./pages/Matchmaking";
 import Leaderboards from "./pages/Leaderboards";
 import Players from "./pages/Players";
 import Agents from "./pages/Agents";
@@ -17,6 +18,7 @@ export default function App() {
     <Shell>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/matchmaking" element={<Matchmaking />} />
         <Route path="/leaderboards" element={<Leaderboards />} />
         <Route path="/players" element={<Players />} />
         <Route path="/agents" element={<Agents />} />
