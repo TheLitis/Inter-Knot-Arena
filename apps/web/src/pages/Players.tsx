@@ -34,7 +34,7 @@ export default function Players() {
               <th>Player</th>
               <th>Region</th>
               <th>Trust</th>
-              <th>Honor Lv</th>
+              <th>Proxy level</th>
               <th>ELO</th>
               <th>Status</th>
             </tr>
