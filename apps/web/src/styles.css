@@ -125,6 +125,7 @@ label {
   border-radius: 0;
   background: transparent;
   border: none;
+  box-shadow: none;
 }
 
 .nav-link {
@@ -137,12 +138,27 @@ label {
   border-radius: 0;
   border-bottom: 2px solid transparent;
   transition: border-color 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .nav-link-active {
   background: transparent;
   color: var(--ink-900);
   border-color: var(--accent-400);
+}
+
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-500);
+}
+
+.nav-link:hover .nav-icon,
+.nav-link-active .nav-icon {
+  color: var(--accent-400);
 }
 
 .header-actions {
