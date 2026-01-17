@@ -99,6 +99,21 @@ export default function Matchmaking() {
     });
   };
 
+  const handleBack = () => {
+    if (selectedLeagueId && isSearching) {
+      if (searchTimerRef.current) {
+        window.clearTimeout(searchTimerRef.current);
+      }
+      updateCounters(selectedLeagueId, (current) => ({
+        waiting: Math.max(0, current.waiting - 1),
+        inProgress: current.inProgress
+      }));
+    }
+    setSelectedLeagueId(null);
+    setStatus(null);
+    setIsSearching(false);
+  };
+
   const handleFindMatch = async () => {
     if (!leagueQueue || !selectedLeagueId) {
       setStatus("Queue is not available yet.");
@@ -140,11 +155,7 @@ export default function Matchmaking() {
             <button
               className="ghost-button"
               type="button"
-              onClick={() => {
-                setSelectedLeagueId(null);
-                setStatus(null);
-                setIsSearching(false);
-              }}
+              onClick={handleBack}
             >
               Back to leagues
             </button>
