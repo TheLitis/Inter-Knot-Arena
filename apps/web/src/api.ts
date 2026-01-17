@@ -3,6 +3,7 @@ import type {
   Dispute,
   DraftActionType,
   EvidenceResult,
+  League,
   Match,
   ProfileSummary,
   QueueConfig,
@@ -10,7 +11,7 @@ import type {
   Ruleset,
   User
 } from "@ika/shared";
-import { agents, demoMatch, profiles, queues, ratings, rulesets, users } from "./data/mock";
+import { agents, demoMatch, leagues, profiles, queues, ratings, rulesets, users } from "./data/mock";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
 
@@ -44,6 +45,10 @@ async function postJson<T>(path: string, payload: unknown, fallback: T): Promise
 
 export function fetchQueues(): Promise<QueueConfig[]> {
   return safeFetch<QueueConfig[]>("/queues", queues);
+}
+
+export function fetchLeagues(): Promise<League[]> {
+  return safeFetch<League[]>("/leagues", leagues);
 }
 
 export async function fetchLeaderboard(leagueId: string): Promise<Rating[]> {

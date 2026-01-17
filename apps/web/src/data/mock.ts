@@ -1,5 +1,6 @@
 import type {
   Agent,
+  League,
   Match,
   ProfileSummary,
   QueueConfig,
@@ -9,6 +10,27 @@ import type {
 } from "@ika/shared";
 
 const now = Date.now();
+
+export const leagues: League[] = [
+  {
+    id: "league_f2p",
+    name: "F2P",
+    type: "F2P",
+    description: "Strict caps and verified-only queues."
+  },
+  {
+    id: "league_standard",
+    name: "Standard",
+    type: "STANDARD",
+    description: "Balanced competitive ruleset with enforced verifier."
+  },
+  {
+    id: "league_unlimited",
+    name: "Unlimited",
+    type: "UNLIMITED",
+    description: "No restrictions beyond match proof."
+  }
+];
 
 export const users: User[] = [
   {
