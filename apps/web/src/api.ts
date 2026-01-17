@@ -11,7 +11,39 @@ import type {
   Ruleset,
   User
 } from "@ika/shared";
-import { agents, demoMatch, leagues, profiles, queues, ratings, rulesets, users } from "./data/mock";
+import {
+  agents,
+  demoMatch,
+  leagues,
+  lobbyStats,
+  profiles,
+  queues,
+  ratings,
+  rulesets,
+  users
+} from "./data/mock";
+
+export interface LobbyStats {
+  leagueId: string;
+  waiting: number;
+  inProgress: number;
+}
+
+export interface MatchmakingSearchResponse {
+  status: "SEARCHING" | "MATCH_FOUND";
+  ticketId: string;
+  match?: Match;
+}
+
+export interface MatchmakingStatusResponse {
+  status: "SEARCHING" | "MATCH_FOUND";
+  match?: Match;
+}
+
+export interface MatchmakingCancelResponse {
+  status: "CANCELED" | "MATCH_FOUND";
+  match?: Match;
+}
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
 
@@ -51,6 +83,10 @@ export function fetchLeagues(): Promise<League[]> {
   return safeFetch<League[]>("/leagues", leagues);
 }
 
+export function fetchLobbyStats(): Promise<LobbyStats[]> {
+  return safeFetch<LobbyStats[]>("/matchmaking/lobbies", lobbyStats);
+}
+
 export async function fetchLeaderboard(leagueId: string): Promise<Rating[]> {
   const fallback = ratings
     .filter((item) => item.leagueId === leagueId)
@@ -86,6 +122,32 @@ export function fetchProfile(userId: string): Promise<ProfileSummary> {
 
 export function joinMatchmaking(userId: string, queueId: string): Promise<Match> {
   return postJson<Match>("/matchmaking/join", { userId, queueId }, demoMatch);
+}
+
+export function startMatchSearch(
+  userId: string,
+  queueId: string
+): Promise<MatchmakingSearchResponse> {
+  return postJson<MatchmakingSearchResponse>(
+    "/matchmaking/search",
+    { userId, queueId },
+    { status: "MATCH_FOUND", ticketId: "ticket_demo", match: demoMatch }
+  );
+}
+
+export function fetchMatchmakingStatus(ticketId: string): Promise<MatchmakingStatusResponse> {
+  return safeFetch<MatchmakingStatusResponse>(
+    `/matchmaking/status/${ticketId}`,
+    { status: "SEARCHING" }
+  );
+}
+
+export function cancelMatchSearch(ticketId: string): Promise<MatchmakingCancelResponse> {
+  return postJson<MatchmakingCancelResponse>(
+    "/matchmaking/cancel",
+    { ticketId },
+    { status: "CANCELED" }
+  );
 }
 
 export function checkinMatch(matchId: string, userId: string): Promise<Match> {

@@ -275,6 +275,12 @@ export const queues: QueueConfig[] = [
   }
 ];
 
+export const lobbyStats = [
+  { leagueId: "league_f2p", waiting: 3, inProgress: 1 },
+  { leagueId: "league_standard", waiting: 6, inProgress: 2 },
+  { leagueId: "league_unlimited", waiting: 2, inProgress: 1 }
+];
+
 export const leaderboard: Rating[] = ratings
   .filter((item) => item.leagueId === "league_standard")
   .slice()

@@ -4,12 +4,25 @@
   Dispute,
   League,
   Match,
+  MatchState,
   QueueConfig,
   Rating,
   Ruleset,
   Season,
   User
 } from "@ika/shared";
+
+export type MatchmakingEntryStatus = "WAITING" | "MATCH_FOUND";
+
+export interface MatchmakingEntry {
+  id: string;
+  queueId: string;
+  userId: string;
+  status: MatchmakingEntryStatus;
+  matchId?: string;
+  createdAt: number;
+  updatedAt: number;
+}
 
 export interface Repository {
   listAgents(): Promise<Agent[]>;
@@ -20,6 +33,7 @@ export interface Repository {
   listUsers(): Promise<User[]>;
   listRatingsByUser(userId: string): Promise<Rating[]>;
   listLeaderboard(leagueId: string): Promise<Rating[]>;
+  listMatchesByStates(states: MatchState[]): Promise<Match[]>;
   getActiveSeason(): Promise<Season>;
   findRuleset(rulesetId: string): Promise<Ruleset>;
   findQueue(queueId: string): Promise<QueueConfig>;
@@ -28,6 +42,13 @@ export interface Repository {
   findMatch(matchId: string): Promise<Match>;
   createMatch(match: Match): Promise<Match>;
   saveMatch(match: Match): Promise<Match>;
+  listMatchmakingEntries(): Promise<MatchmakingEntry[]>;
+  findMatchmakingEntry(entryId: string): Promise<MatchmakingEntry>;
+  findMatchmakingEntryByUser(queueId: string, userId: string): Promise<MatchmakingEntry | null>;
+  findWaitingMatchmakingEntry(queueId: string, excludeUserId: string): Promise<MatchmakingEntry | null>;
+  createMatchmakingEntry(entry: MatchmakingEntry): Promise<MatchmakingEntry>;
+  saveMatchmakingEntry(entry: MatchmakingEntry): Promise<MatchmakingEntry>;
+  deleteMatchmakingEntry(entryId: string): Promise<void>;
   listOpenDisputes(): Promise<Dispute[]>;
   findDispute(disputeId: string): Promise<Dispute>;
   createDispute(dispute: Dispute): Promise<Dispute>;

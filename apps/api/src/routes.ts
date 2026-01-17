@@ -13,6 +13,12 @@ import {
   recordResult,
   resolveDispute
 } from "./services/matchService";
+import {
+  cancelMatchmaking,
+  getLobbyStats,
+  getMatchmakingStatus,
+  searchMatch
+} from "./services/matchmakingService";
 import { getProfileSummary } from "./services/profileService";
 import { createId, now, requireArray, requireString } from "./utils";
 
@@ -27,6 +33,14 @@ export async function registerRoutes(
   storage: StorageClient
 ) {
   app.get("/health", async () => ({ status: "ok" }));
+
+  app.get("/matchmaking/lobbies", async (request, reply) => {
+    try {
+      reply.send(await getLobbyStats(repo));
+    } catch (error) {
+      sendError(reply, error);
+    }
+  });
 
   app.post("/uploads/presign", async (request, reply) => {
     try {
@@ -89,6 +103,42 @@ export async function registerRoutes(
       const queueId = requireString(body?.queueId, "queueId");
       const match = await createMatchFromQueue(repo, queueId, userId);
       reply.send(match);
+    } catch (error) {
+      sendError(reply, error);
+    }
+  });
+
+  app.post("/matchmaking/search", async (request, reply) => {
+    try {
+      const body = request.body as { userId?: string; queueId?: string };
+      const userId = requireString(body?.userId, "userId");
+      const queueId = requireString(body?.queueId, "queueId");
+      const result = await searchMatch(repo, queueId, userId);
+      reply.send(result);
+    } catch (error) {
+      sendError(reply, error);
+    }
+  });
+
+  app.get("/matchmaking/status/:ticketId", async (request, reply) => {
+    try {
+      const ticketId = requireString(
+        (request.params as { ticketId?: string }).ticketId,
+        "ticketId"
+      );
+      const result = await getMatchmakingStatus(repo, ticketId);
+      reply.send(result);
+    } catch (error) {
+      sendError(reply, error);
+    }
+  });
+
+  app.post("/matchmaking/cancel", async (request, reply) => {
+    try {
+      const body = request.body as { ticketId?: string };
+      const ticketId = requireString(body?.ticketId, "ticketId");
+      const result = await cancelMatchmaking(repo, ticketId);
+      reply.send(result);
     } catch (error) {
       sendError(reply, error);
     }

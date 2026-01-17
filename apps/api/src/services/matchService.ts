@@ -12,12 +12,15 @@ import { createId, now } from "../utils";
 export async function createMatchFromQueue(
   repo: Repository,
   queueId: string,
-  userId: string
+  userId: string,
+  opponentUserId?: string
 ): Promise<Match> {
   const queue = await repo.findQueue(queueId);
   const season = await repo.getActiveSeason();
   const template = getDraftTemplate("bo1-standard");
-  const opponent = (await repo.findOpponent(userId)) ?? (await repo.findUser(userId));
+  const opponent = opponentUserId
+    ? await repo.findUser(opponentUserId)
+    : (await repo.findOpponent(userId)) ?? (await repo.findUser(userId));
 
   const match: Match = {
     id: createId("match"),

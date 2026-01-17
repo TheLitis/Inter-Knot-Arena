@@ -95,6 +95,16 @@ CREATE TABLE IF NOT EXISTS matches (
   updated_at bigint NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS matchmaking_queue (
+  id text PRIMARY KEY,
+  queue_id text NOT NULL REFERENCES queues(id) ON DELETE CASCADE,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status text NOT NULL,
+  match_id text REFERENCES matches(id) ON DELETE SET NULL,
+  created_at bigint NOT NULL,
+  updated_at bigint NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS disputes (
   id text PRIMARY KEY,
   match_id text NOT NULL REFERENCES matches(id) ON DELETE CASCADE,
@@ -109,3 +119,6 @@ CREATE TABLE IF NOT EXISTS disputes (
 CREATE INDEX IF NOT EXISTS idx_ratings_league ON ratings (league_id);
 CREATE INDEX IF NOT EXISTS idx_disputes_status ON disputes (status);
 CREATE INDEX IF NOT EXISTS idx_matches_state ON matches (state);
+CREATE INDEX IF NOT EXISTS idx_matchmaking_queue_queue ON matchmaking_queue (queue_id);
+CREATE INDEX IF NOT EXISTS idx_matchmaking_queue_status ON matchmaking_queue (status);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_matchmaking_queue_user_queue ON matchmaking_queue (queue_id, user_id);

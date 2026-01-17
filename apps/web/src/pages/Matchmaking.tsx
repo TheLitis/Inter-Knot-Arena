@@ -1,7 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { League, ProfileSummary, QueueConfig } from "@ika/shared";
-import { fetchLeagues, fetchProfile, fetchQueues, joinMatchmaking } from "../api";
+import {
+  cancelMatchSearch,
+  fetchLeagues,
+  fetchLobbyStats,
+  fetchMatchmakingStatus,
+  fetchProfile,
+  fetchQueues,
+  startMatchSearch
+} from "../api";
 
 type LobbyCounters = {
   waiting: number;
@@ -10,12 +18,6 @@ type LobbyCounters = {
 
 const leagueOrder = ["league_f2p", "league_standard", "league_unlimited"];
 
-const defaultCounters: Record<string, LobbyCounters> = {
-  league_f2p: { waiting: 3, inProgress: 1 },
-  league_standard: { waiting: 6, inProgress: 2 },
-  league_unlimited: { waiting: 2, inProgress: 1 }
-};
-
 function readCurrentUserId(): string {
   if (typeof window === "undefined") {
     return "user_ellen";
@@ -23,19 +25,11 @@ function readCurrentUserId(): string {
   return window.localStorage.getItem("ika:userId") ?? "user_ellen";
 }
 
-function loadCounters(): Record<string, LobbyCounters> {
-  if (typeof window === "undefined") {
-    return { ...defaultCounters };
-  }
-  const stored = window.localStorage.getItem("ika:lobbyCounters");
-  if (!stored) {
-    return { ...defaultCounters };
-  }
-  try {
-    return { ...defaultCounters, ...(JSON.parse(stored) as Record<string, LobbyCounters>) };
-  } catch {
-    return { ...defaultCounters };
-  }
+function toLobbyMap(stats: { leagueId: string; waiting: number; inProgress: number }[]) {
+  return stats.reduce<Record<string, LobbyCounters>>((acc, stat) => {
+    acc[stat.leagueId] = { waiting: stat.waiting, inProgress: stat.inProgress };
+    return acc;
+  }, {});
 }
 
 export default function Matchmaking() {
@@ -45,15 +39,21 @@ export default function Matchmaking() {
   const [selectedLeagueId, setSelectedLeagueId] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [lobbyCounters, setLobbyCounters] = useState<Record<string, LobbyCounters>>(loadCounters);
+  const [ticketId, setTicketId] = useState<string | null>(null);
+  const [lobbyCounters, setLobbyCounters] = useState<Record<string, LobbyCounters>>({});
   const navigate = useNavigate();
   const currentUserId = useMemo(readCurrentUserId, []);
-  const searchTimerRef = useRef<number | null>(null);
+  const pollRef = useRef<number | null>(null);
+
+  const refreshLobbyStats = useCallback(() => {
+    fetchLobbyStats().then((stats) => setLobbyCounters(toLobbyMap(stats)));
+  }, []);
 
   useEffect(() => {
     fetchQueues().then(setQueues);
     fetchLeagues().then(setLeagues);
     fetchProfile(currentUserId).then(setProfile);
+    refreshLobbyStats();
   }, []);
 
   useEffect(() => {
@@ -63,18 +63,31 @@ export default function Matchmaking() {
   }, [currentUserId]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("ika:lobbyCounters", JSON.stringify(lobbyCounters));
-    }
-  }, [lobbyCounters]);
+    const interval = window.setInterval(refreshLobbyStats, 4000);
+    return () => window.clearInterval(interval);
+  }, [refreshLobbyStats]);
 
   useEffect(() => {
+    if (!ticketId || !isSearching) {
+      return;
+    }
+    pollRef.current = window.setInterval(async () => {
+      const result = await fetchMatchmakingStatus(ticketId);
+      if (result.status === "MATCH_FOUND" && result.match) {
+        setStatus(null);
+        setIsSearching(false);
+        setTicketId(null);
+        refreshLobbyStats();
+        navigate(`/match/${result.match.id}`);
+      }
+    }, 2000);
+
     return () => {
-      if (searchTimerRef.current) {
-        window.clearTimeout(searchTimerRef.current);
+      if (pollRef.current) {
+        window.clearInterval(pollRef.current);
       }
     };
-  }, []);
+  }, [ticketId, isSearching, navigate, refreshLobbyStats]);
 
   const sortedLeagues = useMemo(() => {
     return leagues.slice().sort((a, b) => {
@@ -86,65 +99,56 @@ export default function Matchmaking() {
 
   const selectedLeague = leagues.find((league) => league.id === selectedLeagueId) ?? null;
   const leagueQueue = queues.find((queue) => queue.leagueId === selectedLeagueId) ?? null;
-  const leagueRating =
-    profile?.ratings.find((rating) => rating.leagueId === selectedLeagueId) ?? null;
+  const leagueRating = profile?.ratings.find((rating) => rating.leagueId === selectedLeagueId) ?? null;
   const counters = selectedLeagueId
     ? lobbyCounters[selectedLeagueId] ?? { waiting: 0, inProgress: 0 }
     : { waiting: 0, inProgress: 0 };
-
-  const updateCounters = (leagueId: string, updater: (prev: LobbyCounters) => LobbyCounters) => {
-    setLobbyCounters((prev) => {
-      const current = prev[leagueId] ?? { waiting: 0, inProgress: 0 };
-      return { ...prev, [leagueId]: updater(current) };
-    });
-  };
-
-  const handleBack = () => {
-    if (selectedLeagueId && isSearching) {
-      if (searchTimerRef.current) {
-        window.clearTimeout(searchTimerRef.current);
-      }
-      updateCounters(selectedLeagueId, (current) => ({
-        waiting: Math.max(0, current.waiting - 1),
-        inProgress: current.inProgress
-      }));
-    }
-    setSelectedLeagueId(null);
-    setStatus(null);
-    setIsSearching(false);
-  };
 
   const handleFindMatch = async () => {
     if (!leagueQueue || !selectedLeagueId) {
       setStatus("Queue is not available yet.");
       return;
     }
-    setStatus("Looking for opponent...");
+    setStatus("Waiting for opponent...");
     setIsSearching(true);
-    updateCounters(selectedLeagueId, (current) => ({
-      waiting: current.waiting + 1,
-      inProgress: current.inProgress
-    }));
+    const result = await startMatchSearch(currentUserId, leagueQueue.id);
+    setTicketId(result.ticketId);
+    if (result.status === "MATCH_FOUND" && result.match) {
+      setStatus(null);
+      setIsSearching(false);
+      setTicketId(null);
+      refreshLobbyStats();
+      navigate(`/match/${result.match.id}`);
+      return;
+    }
+    refreshLobbyStats();
+  };
 
-    searchTimerRef.current = window.setTimeout(async () => {
-      try {
-        const match = await joinMatchmaking(currentUserId, leagueQueue.id);
-        updateCounters(selectedLeagueId, (current) => ({
-          waiting: Math.max(0, current.waiting - 1),
-          inProgress: current.inProgress + 1
-        }));
-        setStatus(null);
-        setIsSearching(false);
-        navigate(`/match/${match.id}`);
-      } catch {
-        updateCounters(selectedLeagueId, (current) => ({
-          waiting: Math.max(0, current.waiting - 1),
-          inProgress: current.inProgress
-        }));
-        setStatus("Failed to join queue.");
-        setIsSearching(false);
-      }
-    }, 1800);
+  const handleCancelSearch = async () => {
+    if (!ticketId) {
+      return;
+    }
+    const result = await cancelMatchSearch(ticketId);
+    if (result.status === "MATCH_FOUND" && result.match) {
+      setStatus(null);
+      setIsSearching(false);
+      setTicketId(null);
+      refreshLobbyStats();
+      navigate(`/match/${result.match.id}`);
+      return;
+    }
+    setStatus(null);
+    setIsSearching(false);
+    setTicketId(null);
+    refreshLobbyStats();
+  };
+
+  const handleBack = () => {
+    if (isSearching && ticketId) {
+      handleCancelSearch();
+    }
+    setSelectedLeagueId(null);
+    setStatus(null);
   };
 
   return (
@@ -152,19 +156,49 @@ export default function Matchmaking() {
       {selectedLeagueId ? (
         <>
           <section className="section-header">
-            <button
-              className="ghost-button"
-              type="button"
-              onClick={handleBack}
-            >
+            <button className="ghost-button" type="button" onClick={handleBack}>
               Back to leagues
             </button>
             <h2>{selectedLeague?.name ?? "League"} lobby</h2>
-            <p>Queue status and match search for this league.</p>
+            <p>Queue status and matchmaking for the selected league.</p>
           </section>
 
-          <section className="grid">
-            <div className="card">
+          <section className="lobby-hero">
+            <div className="card lobby-info">
+              <div className="card-header">
+                <h3>{selectedLeague?.name ?? "League"}</h3>
+                <span className="badge-outline">{selectedLeague?.type ?? "STANDARD"}</span>
+              </div>
+              <p>{selectedLeague?.description ?? "Competitive queue overview."}</p>
+              <div className="chip-row">
+                <span className={leagueQueue?.requireVerifier ? "badge" : "badge-outline"}>
+                  {leagueQueue?.requireVerifier ? "Verifier required" : "Open queue"}
+                </span>
+              </div>
+              <div className="meta-row">
+                <div>
+                  <div className="meta-label">Queue</div>
+                  <div className="meta-value">{leagueQueue?.name ?? "TBD"}</div>
+                </div>
+                <div>
+                  <div className="meta-label">Ruleset</div>
+                  <div className="meta-value">{leagueQueue?.rulesetId ?? "TBD"}</div>
+                </div>
+              </div>
+              <div className="lobby-actions">
+                <button className="primary-button" onClick={handleFindMatch} disabled={isSearching}>
+                  {isSearching ? "Searching..." : "Find match"}
+                </button>
+                {isSearching ? (
+                  <button className="ghost-button" onClick={handleCancelSearch}>
+                    Cancel search
+                  </button>
+                ) : null}
+                {status ? <span className="lobby-status">{status}</span> : null}
+              </div>
+            </div>
+
+            <div className="card lobby-profile">
               <div className="card-header">
                 <h3>Player card</h3>
                 <span className="badge-outline">{profile?.user.verifiedStatus ?? "PENDING"}</span>
@@ -194,37 +228,18 @@ export default function Matchmaking() {
                 </div>
               </div>
             </div>
+          </section>
 
-            <div className="card">
-              <div className="card-header">
-                <h3>League activity</h3>
-                <span className="badge-outline">{selectedLeague?.type ?? "STANDARD"}</span>
-              </div>
-              <div className="meta-row">
-                <div>
-                  <div className="meta-label">Waiting</div>
-                  <div className="stat-value">{counters.waiting}</div>
-                </div>
-                <div>
-                  <div className="meta-label">Matches live</div>
-                  <div className="stat-value">{counters.inProgress}</div>
-                </div>
-              </div>
-              <p>{selectedLeague?.description ?? "Queue status per league."}</p>
+          <section className="lobby-stats">
+            <div className="card lobby-stat">
+              <div className="meta-label">Waiting players</div>
+              <div className="stat-value">{counters.waiting}</div>
+              <p>Players currently searching in this league.</p>
             </div>
-
-            <div className="card">
-              <div className="card-header">
-                <h3>Find a match</h3>
-                <span className="badge">{leagueQueue?.requireVerifier ? "Verifier" : "Open"}</span>
-              </div>
-              <p>Start searching for an opponent in this league lobby.</p>
-              <div className="card-actions">
-                <button className="primary-button" onClick={handleFindMatch} disabled={isSearching}>
-                  {isSearching ? "Searching..." : "Find match"}
-                </button>
-                {status ? <span className="meta-label">{status}</span> : null}
-              </div>
+            <div className="card lobby-stat">
+              <div className="meta-label">Matches live</div>
+              <div className="stat-value">{counters.inProgress}</div>
+              <p>Active matches running in this league.</p>
             </div>
           </section>
         </>
@@ -235,11 +250,11 @@ export default function Matchmaking() {
             <p>Select the ruleset tier to open its matchmaking lobby.</p>
           </section>
 
-          <div className="grid">
+          <div className="grid matchmaking-leagues">
             {sortedLeagues.map((league) => (
               <button
                 key={league.id}
-                className="card card-button"
+                className="card card-button league-card"
                 onClick={() => setSelectedLeagueId(league.id)}
               >
                 <div className="card-header">

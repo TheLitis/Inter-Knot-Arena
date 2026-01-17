@@ -1,4 +1,4 @@
-﻿import type { Dispute, Match, Rating } from "@ika/shared";
+﻿import type { Dispute, Match, MatchState, Rating } from "@ika/shared";
 import {
   agents,
   challenges,
@@ -9,7 +9,7 @@ import {
   seasons,
   users
 } from "../seed";
-import type { Repository } from "./types";
+import type { MatchmakingEntry, Repository } from "./types";
 
 interface MemoryState {
   agents: typeof agents;
@@ -22,6 +22,7 @@ interface MemoryState {
   queues: typeof queues;
   matches: Map<string, Match>;
   disputes: Map<string, Dispute>;
+  matchmakingQueue: Map<string, MatchmakingEntry>;
 }
 
 export function createMemoryRepository(): Repository {
@@ -35,7 +36,8 @@ export function createMemoryRepository(): Repository {
     ratings,
     queues,
     matches: new Map(),
-    disputes: new Map()
+    disputes: new Map(),
+    matchmakingQueue: new Map()
   };
 
   return {
@@ -62,6 +64,9 @@ export function createMemoryRepository(): Repository {
     },
     async listLeaderboard(leagueId: string) {
       return sortRatings(state.ratings, leagueId);
+    },
+    async listMatchesByStates(states: MatchState[]) {
+      return Array.from(state.matches.values()).filter((match) => states.includes(match.state));
     },
     async getActiveSeason() {
       const season = state.seasons.find((item) => item.status === "ACTIVE");
@@ -108,6 +113,44 @@ export function createMemoryRepository(): Repository {
     async saveMatch(match: Match) {
       state.matches.set(match.id, match);
       return match;
+    },
+    async listMatchmakingEntries() {
+      return Array.from(state.matchmakingQueue.values());
+    },
+    async findMatchmakingEntry(entryId: string) {
+      const entry = state.matchmakingQueue.get(entryId);
+      if (!entry) {
+        throw new Error("Matchmaking ticket not found");
+      }
+      return entry;
+    },
+    async findMatchmakingEntryByUser(queueId: string, userId: string) {
+      return (
+        Array.from(state.matchmakingQueue.values()).find(
+          (entry) => entry.queueId === queueId && entry.userId === userId
+        ) ?? null
+      );
+    },
+    async findWaitingMatchmakingEntry(queueId: string, excludeUserId: string) {
+      return (
+        Array.from(state.matchmakingQueue.values()).find(
+          (entry) =>
+            entry.queueId === queueId &&
+            entry.userId !== excludeUserId &&
+            entry.status === "WAITING"
+        ) ?? null
+      );
+    },
+    async createMatchmakingEntry(entry: MatchmakingEntry) {
+      state.matchmakingQueue.set(entry.id, entry);
+      return entry;
+    },
+    async saveMatchmakingEntry(entry: MatchmakingEntry) {
+      state.matchmakingQueue.set(entry.id, entry);
+      return entry;
+    },
+    async deleteMatchmakingEntry(entryId: string) {
+      state.matchmakingQueue.delete(entryId);
     },
     async listOpenDisputes() {
       return Array.from(state.disputes.values()).filter((item) => item.status === "OPEN");

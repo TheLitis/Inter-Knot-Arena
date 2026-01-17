@@ -4,6 +4,7 @@
   Dispute,
   League,
   Match,
+  MatchState,
   QueueConfig,
   Rating,
   Ruleset,
@@ -12,7 +13,7 @@
 } from "@ika/shared";
 import type { Pool } from "pg";
 import { getPool } from "../db/pool";
-import type { Repository } from "./types";
+import type { MatchmakingEntry, Repository } from "./types";
 
 export function createPostgresRepository(): Repository {
   return new PostgresRepository(getPool());
@@ -65,6 +66,14 @@ class PostgresRepository implements Repository {
       [leagueId]
     );
     return result.rows.map(mapRating);
+  }
+
+  async listMatchesByStates(states: MatchState[]): Promise<Match[]> {
+    if (states.length === 0) {
+      return [];
+    }
+    const result = await this.pool.query("SELECT * FROM matches WHERE state = ANY($1)", [states]);
+    return result.rows.map(mapMatch);
   }
 
   async getActiveSeason(): Promise<Season> {
@@ -199,6 +208,93 @@ class PostgresRepository implements Repository {
       throw new Error("Match not found");
     }
     return match;
+  }
+
+  async listMatchmakingEntries(): Promise<MatchmakingEntry[]> {
+    const result = await this.pool.query("SELECT * FROM matchmaking_queue");
+    return result.rows.map(mapMatchmakingEntry);
+  }
+
+  async findMatchmakingEntry(entryId: string): Promise<MatchmakingEntry> {
+    const result = await this.pool.query("SELECT * FROM matchmaking_queue WHERE id = $1", [entryId]);
+    const row = result.rows[0];
+    if (!row) {
+      throw new Error("Matchmaking ticket not found");
+    }
+    return mapMatchmakingEntry(row);
+  }
+
+  async findMatchmakingEntryByUser(queueId: string, userId: string): Promise<MatchmakingEntry | null> {
+    const result = await this.pool.query(
+      "SELECT * FROM matchmaking_queue WHERE queue_id = $1 AND user_id = $2 ORDER BY created_at DESC LIMIT 1",
+      [queueId, userId]
+    );
+    const row = result.rows[0];
+    return row ? mapMatchmakingEntry(row) : null;
+  }
+
+  async findWaitingMatchmakingEntry(queueId: string, excludeUserId: string): Promise<MatchmakingEntry | null> {
+    const result = await this.pool.query(
+      "SELECT * FROM matchmaking_queue WHERE queue_id = $1 AND status = $2 AND user_id <> $3 ORDER BY created_at ASC LIMIT 1",
+      [queueId, "WAITING", excludeUserId]
+    );
+    const row = result.rows[0];
+    return row ? mapMatchmakingEntry(row) : null;
+  }
+
+  async createMatchmakingEntry(entry: MatchmakingEntry): Promise<MatchmakingEntry> {
+    await this.pool.query(
+      `INSERT INTO matchmaking_queue (
+         id,
+         queue_id,
+         user_id,
+         status,
+         match_id,
+         created_at,
+         updated_at
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        entry.id,
+        entry.queueId,
+        entry.userId,
+        entry.status,
+        entry.matchId ?? null,
+        entry.createdAt,
+        entry.updatedAt
+      ]
+    );
+    return entry;
+  }
+
+  async saveMatchmakingEntry(entry: MatchmakingEntry): Promise<MatchmakingEntry> {
+    const result = await this.pool.query(
+      `UPDATE matchmaking_queue
+       SET queue_id = $1,
+           user_id = $2,
+           status = $3,
+           match_id = $4,
+           created_at = $5,
+           updated_at = $6
+       WHERE id = $7`,
+      [
+        entry.queueId,
+        entry.userId,
+        entry.status,
+        entry.matchId ?? null,
+        entry.createdAt,
+        entry.updatedAt,
+        entry.id
+      ]
+    );
+    if (result.rowCount === 0) {
+      throw new Error("Matchmaking ticket not found");
+    }
+    return entry;
+  }
+
+  async deleteMatchmakingEntry(entryId: string): Promise<void> {
+    await this.pool.query("DELETE FROM matchmaking_queue WHERE id = $1", [entryId]);
   }
 
   async listOpenDisputes(): Promise<Dispute[]> {
@@ -395,6 +491,18 @@ function mapMatch(row: Record<string, unknown>): Match {
       result: evidence.result ?? undefined
     },
     confirmedBy: (row.confirmed_by as Match["confirmedBy"]) ?? [],
+    createdAt: toNumber(row.created_at),
+    updatedAt: toNumber(row.updated_at)
+  };
+}
+
+function mapMatchmakingEntry(row: Record<string, unknown>): MatchmakingEntry {
+  return {
+    id: String(row.id),
+    queueId: String(row.queue_id),
+    userId: String(row.user_id),
+    status: row.status as MatchmakingEntry["status"],
+    matchId: (row.match_id as string | null) ?? undefined,
     createdAt: toNumber(row.created_at),
     updatedAt: toNumber(row.updated_at)
   };
