@@ -7,11 +7,14 @@ import Players from "./pages/Players";
 import Agents from "./pages/Agents";
 import Rulesets from "./pages/Rulesets";
 import Profile from "./pages/Profile";
+import SignIn from "./pages/SignIn";
+import Settings from "./pages/Settings";
 import MatchRoom from "./pages/MatchRoom";
 import UidVerify from "./pages/UidVerify";
 import Roster from "./pages/Roster";
 import Disputes from "./pages/Disputes";
 import Admin from "./pages/Admin";
+import { RequireAuth } from "./auth/RequireAuth";
 
 export default function App() {
   return (
@@ -24,6 +27,15 @@ export default function App() {
         <Route path="/agents" element={<Agents />} />
         <Route path="/rulesets" element={<Rulesets />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route
+          path="/settings"
+          element={
+            <RequireAuth>
+              <Settings />
+            </RequireAuth>
+          }
+        />
         <Route path="/match/:id" element={<MatchRoom />} />
         <Route path="/uid-verify" element={<UidVerify />} />
         <Route path="/roster" element={<Roster />} />

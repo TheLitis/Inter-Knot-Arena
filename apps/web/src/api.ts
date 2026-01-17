@@ -75,6 +75,32 @@ async function postJson<T>(path: string, payload: unknown, fallback: T): Promise
   }
 }
 
+async function postJsonWithCredentials<T>(path: string, payload?: unknown): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: payload ? JSON.stringify(payload) : undefined
+  });
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
+  }
+  return (await response.json()) as T;
+}
+
+async function patchJsonWithCredentials<T>(path: string, payload: unknown): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
+  }
+  return (await response.json()) as T;
+}
+
 export function fetchQueues(): Promise<QueueConfig[]> {
   return safeFetch<QueueConfig[]>("/queues", queues);
 }
@@ -235,4 +261,41 @@ export function resolveDispute(disputeId: string, decision: string): Promise<Dis
     decision,
     createdAt: Date.now()
   });
+}
+
+export async function fetchAuthMe(): Promise<User | null> {
+  try {
+    const response = await fetch(`${API_BASE}/auth/me`, { credentials: "include" });
+    if (!response.ok) {
+      return null;
+    }
+    return (await response.json()) as User;
+  } catch {
+    return null;
+  }
+}
+
+export async function startGoogleAuth(redirect?: string): Promise<{ url: string }> {
+  const url = new URL(`${API_BASE}/auth/google/start`, window.location.origin);
+  if (redirect) {
+    url.searchParams.set("redirect", redirect);
+  }
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error("Failed to start Google auth");
+  }
+  return (await response.json()) as { url: string };
+}
+
+export async function logout(): Promise<void> {
+  await postJsonWithCredentials("/auth/logout");
+}
+
+export async function updateMe(payload: {
+  displayName?: string;
+  region?: string;
+  avatarUrl?: string | null;
+  privacy?: { showUidPublicly?: boolean; showMatchHistoryPublicly?: boolean };
+}): Promise<User> {
+  return patchJsonWithCredentials<User>("/users/me", payload);
 }

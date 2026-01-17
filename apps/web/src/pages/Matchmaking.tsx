@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { League, ProfileSummary, QueueConfig } from "@ika/shared";
 import {
@@ -10,6 +10,7 @@ import {
   fetchQueues,
   startMatchSearch
 } from "../api";
+import { useAuth } from "../auth/AuthProvider";
 
 type LobbyCounters = {
   waiting: number;
@@ -42,7 +43,9 @@ export default function Matchmaking() {
   const [ticketId, setTicketId] = useState<string | null>(null);
   const [lobbyCounters, setLobbyCounters] = useState<Record<string, LobbyCounters>>({});
   const navigate = useNavigate();
-  const currentUserId = useMemo(readCurrentUserId, []);
+  const { user } = useAuth();
+  const fallbackUserId = useMemo(readCurrentUserId, []);
+  const currentUserId = user?.id ?? fallbackUserId;
   const pollRef = useRef<number | null>(null);
 
   const refreshLobbyStats = useCallback(() => {
@@ -201,7 +204,7 @@ export default function Matchmaking() {
             <div className="card lobby-profile">
               <div className="card-header">
                 <h3>Player card</h3>
-                <span className="badge-outline">{profile?.user.verifiedStatus ?? "PENDING"}</span>
+                <span className="badge-outline">{profile?.user.verification.status ?? "PENDING"}</span>
               </div>
               <div className="stack">
                 <div className="row">
@@ -210,7 +213,7 @@ export default function Matchmaking() {
                 </div>
                 <div className="row">
                   <span>Proxy level</span>
-                  <span className="badge-outline">{profile?.user.proxyLevel ?? 0} / 60</span>
+                  <span className="badge-outline">{profile?.user.proxyLevel.level ?? 0} / 60</span>
                 </div>
                 <div className="row">
                   <span>Trust</span>

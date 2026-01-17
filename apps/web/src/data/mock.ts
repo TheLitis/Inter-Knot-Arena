@@ -35,43 +35,59 @@ export const leagues: League[] = [
 export const users: User[] = [
   {
     id: "user_ellen",
-    handle: "Ellen",
+    email: "ellen@interknot.dev",
     displayName: "Ellen",
+    avatarUrl: null,
     region: "NA",
+    createdAt: now,
+    updatedAt: now,
     roles: ["USER", "VERIFIED"],
     trustScore: 128,
-    proxyLevel: 12,
-    verifiedStatus: "VERIFIED"
+    proxyLevel: { level: 12, xp: 420, nextXp: 600 },
+    verification: { status: "VERIFIED", region: "NA", uid: "123456789" },
+    privacy: { showUidPublicly: true, showMatchHistoryPublicly: true }
   },
   {
     id: "user_lycaon",
-    handle: "Lycaon",
+    email: "lycaon@interknot.dev",
     displayName: "Lycaon",
+    avatarUrl: null,
     region: "EU",
+    createdAt: now,
+    updatedAt: now,
     roles: ["USER", "VERIFIED"],
     trustScore: 114,
-    proxyLevel: 10,
-    verifiedStatus: "VERIFIED"
+    proxyLevel: { level: 10, xp: 220, nextXp: 400 },
+    verification: { status: "VERIFIED", region: "EU", uid: "987654321" },
+    privacy: { showUidPublicly: false, showMatchHistoryPublicly: true }
   },
   {
     id: "user_nicole",
-    handle: "Nicole",
+    email: "nicole@interknot.dev",
     displayName: "Nicole",
+    avatarUrl: null,
     region: "ASIA",
+    createdAt: now,
+    updatedAt: now,
     roles: ["USER"],
     trustScore: 98,
-    proxyLevel: 6,
-    verifiedStatus: "UNVERIFIED"
+    proxyLevel: { level: 6, xp: 80, nextXp: 200 },
+    verification: { status: "UNVERIFIED" },
+    privacy: { showUidPublicly: false, showMatchHistoryPublicly: false }
   },
   {
     id: "user_anby",
-    handle: "Anby",
+    email: "anby@interknot.dev",
     displayName: "Anby",
+    avatarUrl: null,
     region: "NA",
+    createdAt: now,
+    updatedAt: now,
     roles: ["USER"],
     trustScore: 102,
-    proxyLevel: 7,
-    verifiedStatus: "PENDING"
+    proxyLevel: { level: 7, xp: 120, nextXp: 220 },
+    verification: { status: "PENDING", region: "NA" },
+    privacy: { showUidPublicly: false, showMatchHistoryPublicly: true }
   }
 ];
 

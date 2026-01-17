@@ -2,6 +2,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import SearchBar from "./SearchBar";
+import UserMenu from "./UserMenu";
 
 const navItems = [
   {
@@ -172,9 +173,7 @@ export default function Shell({ children }: ShellProps) {
             <span className="status-dot" />
             Season 01
           </div>
-          <Link className="avatar-button" to="/profile/user_ellen" title="Open profile">
-            <span className="avatar-initials">E</span>
-          </Link>
+          <UserMenu />
         </div>
       </header>
       <main className="app-main">{children}</main>

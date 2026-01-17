@@ -143,32 +143,44 @@ try {
     await client.query(
       `INSERT INTO users (
          id,
-         handle,
          display_name,
+         email,
+         avatar_url,
          region,
          roles,
          trust_score,
          proxy_level,
-         verified_status
+         verification,
+         privacy,
+         created_at,
+         updated_at
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        ON CONFLICT (id) DO UPDATE
-       SET handle = EXCLUDED.handle,
-           display_name = EXCLUDED.display_name,
+       SET display_name = EXCLUDED.display_name,
+           email = EXCLUDED.email,
+           avatar_url = EXCLUDED.avatar_url,
            region = EXCLUDED.region,
            roles = EXCLUDED.roles,
            trust_score = EXCLUDED.trust_score,
            proxy_level = EXCLUDED.proxy_level,
-           verified_status = EXCLUDED.verified_status`,
+           verification = EXCLUDED.verification,
+           privacy = EXCLUDED.privacy,
+           created_at = EXCLUDED.created_at,
+           updated_at = EXCLUDED.updated_at`,
       [
         user.id,
-        user.handle,
         user.displayName,
+        user.email,
+        user.avatarUrl ?? null,
         user.region,
         toJson(user.roles),
         user.trustScore,
-        user.proxyLevel,
-        user.verifiedStatus
+        toJson(user.proxyLevel),
+        toJson(user.verification),
+        toJson(user.privacy),
+        user.createdAt,
+        user.updatedAt
       ]
     );
   }

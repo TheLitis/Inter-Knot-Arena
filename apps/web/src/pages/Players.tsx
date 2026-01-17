@@ -51,13 +51,13 @@ export default function Players() {
                   </td>
                   <td>{user.region}</td>
                   <td>{user.trustScore}</td>
-                  <td>{user.proxyLevel}</td>
+                  <td>{user.proxyLevel.level}</td>
                   <td>{rating ? rating.elo : "-"}</td>
                   <td>
-                    {user.verifiedStatus === "VERIFIED" ? (
+                    {user.verification.status === "VERIFIED" ? (
                       <span className="badge">Verified</span>
                     ) : (
-                      <span className="badge-outline">{user.verifiedStatus}</span>
+                      <span className="badge-outline">{user.verification.status}</span>
                     )}
                   </td>
                 </tr>

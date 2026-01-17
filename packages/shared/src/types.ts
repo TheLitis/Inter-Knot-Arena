@@ -7,18 +7,54 @@ export interface League {
   description: string;
 }
 
-export type Role = "GUEST" | "USER" | "VERIFIED" | "JUDGE" | "SENIOR_JUDGE" | "ADMIN";
+export type Role = "USER" | "VERIFIED" | "JUDGE" | "ADMIN";
 export type IdentityStatus = "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+export type Region = "NA" | "EU" | "ASIA" | "SEA" | "OTHER";
+
+export interface ProxyLevel {
+  level: number;
+  xp: number;
+  nextXp: number;
+}
+
+export interface UserVerification {
+  status: IdentityStatus;
+  region?: string;
+  uid?: string;
+}
+
+export interface UserPrivacy {
+  showUidPublicly: boolean;
+  showMatchHistoryPublicly: boolean;
+}
 
 export interface User {
   id: string;
-  handle: string;
+  email: string;
   displayName: string;
-  region: string;
+  avatarUrl: string | null;
+  region: Region;
+  createdAt: number;
+  updatedAt: number;
   roles: Role[];
   trustScore: number;
-  proxyLevel: number;
-  verifiedStatus: IdentityStatus;
+  proxyLevel: ProxyLevel;
+  verification: UserVerification;
+  privacy: UserPrivacy;
+}
+
+export interface Session {
+  id: string;
+  userId: string;
+  createdAt: number;
+  expiresAt: number;
+}
+
+export interface OAuthAccount {
+  provider: "google";
+  providerAccountId: string;
+  userId: string;
+  email: string;
 }
 
 export interface IdentityProof {

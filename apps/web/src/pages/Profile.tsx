@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Calendar,
   CheckCircle2,
@@ -28,6 +29,7 @@ import { Progress } from "../components/ui/progress";
 import { Skeleton } from "../components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
+import { useAuth } from "../auth/AuthProvider";
 
 const standardSeries = Array.from({ length: 30 }, (_, index) => {
   const base = 1620;
@@ -378,12 +380,26 @@ const pastTournaments: TournamentItem[] = [
 ];
 
 export default function Profile() {
+  const { id } = useParams();
+  const { user, isLoading: authLoading } = useAuth();
   const [tab, setTab] = useState("overview");
   const proxyLevel = 12;
   const proxyCap = 60;
   const proxyProgress = Math.round((proxyLevel / proxyCap) * 100);
   const trustScore = 128;
   const isLoading = false;
+
+  if (authLoading || isLoading) {
+    return <ProfileSkeleton />;
+  }
+
+  if (!user) {
+    return <div className="card">Sign in to view your profile.</div>;
+  }
+
+  if (id && user.id !== id) {
+    return <div className="card">Profile is private for MVP.</div>;
+  }
 
   const recentMatches: RecentMatchItem[] = matchHistory.slice(0, 5).map((match) => ({
     id: match.id,

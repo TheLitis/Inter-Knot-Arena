@@ -96,8 +96,24 @@ export function createMemoryRepository(): Repository {
       }
       return user;
     },
+    async findUserByEmail(email: string) {
+      return state.users.find((item) => item.email === email) ?? null;
+    },
     async findOpponent(userId: string) {
       return state.users.find((user) => user.id !== userId) ?? null;
+    },
+    async createUser(user) {
+      state.users.push(user);
+      return user;
+    },
+    async saveUser(user) {
+      const index = state.users.findIndex((item) => item.id === user.id);
+      if (index === -1) {
+        state.users.push(user);
+      } else {
+        state.users[index] = user;
+      }
+      return user;
     },
     async findMatch(matchId: string) {
       const match = state.matches.get(matchId);

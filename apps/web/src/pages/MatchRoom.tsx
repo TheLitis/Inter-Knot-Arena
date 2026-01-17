@@ -12,6 +12,7 @@ import {
   submitPrecheck,
   submitResult
 } from "../api";
+import { useAuth } from "../auth/AuthProvider";
 
 function readCurrentUserId(): string {
   if (typeof window === "undefined") {
@@ -56,7 +57,9 @@ export default function MatchRoom() {
   const [match, setMatch] = useState<Match | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [currentUserId] = useState(readCurrentUserId);
+  const { user } = useAuth();
+  const [fallbackUserId] = useState(readCurrentUserId);
+  const currentUserId = user?.id ?? fallbackUserId;
   const [resultType, setResultType] = useState<"TIME_MS" | "SCORE" | "RANK_TIER">("TIME_MS");
   const [resultValue, setResultValue] = useState<string>("");
   const [proofUrl, setProofUrl] = useState<string>("");

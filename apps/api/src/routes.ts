@@ -19,7 +19,6 @@ import {
   getMatchmakingStatus,
   searchMatch
 } from "./services/matchmakingService";
-import { getProfileSummary } from "./services/profileService";
 import { createId, now, requireArray, requireString } from "./utils";
 
 function sendError(reply: { code: (status: number) => { send: (payload: unknown) => void } }, error: unknown) {
@@ -66,26 +65,6 @@ export async function registerRoutes(
   app.get("/challenges", async () => repo.listChallenges());
   app.get("/queues", async () => repo.listQueues());
   app.get("/seasons/current", async () => repo.getActiveSeason());
-  app.get("/users", async () => repo.listUsers());
-
-  app.get("/users/:id", async (request, reply) => {
-    try {
-      const userId = requireString((request.params as { id?: string }).id, "userId");
-      reply.send(await repo.findUser(userId));
-    } catch (error) {
-      sendError(reply, error);
-    }
-  });
-
-  app.get("/profiles/:id", async (request, reply) => {
-    try {
-      const userId = requireString((request.params as { id?: string }).id, "userId");
-      reply.send(await getProfileSummary(repo, userId));
-    } catch (error) {
-      sendError(reply, error);
-    }
-  });
-
   app.get("/leaderboards/:leagueId", async (request, reply) => {
     try {
       const leagueId = requireString((request.params as { leagueId?: string }).leagueId, "leagueId");

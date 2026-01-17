@@ -115,6 +115,12 @@ class PostgresRepository implements Repository {
     return mapUser(row);
   }
 
+  async findUserByEmail(email: string): Promise<User | null> {
+    const result = await this.pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    const row = result.rows[0];
+    return row ? mapUser(row) : null;
+  }
+
   async findOpponent(userId: string): Promise<User | null> {
     const result = await this.pool.query(
       "SELECT * FROM users WHERE id <> $1 ORDER BY random() LIMIT 1",
@@ -131,6 +137,79 @@ class PostgresRepository implements Repository {
       throw new Error("Match not found");
     }
     return mapMatch(row);
+  }
+
+  async createUser(user: User): Promise<User> {
+    const payload = serializeUser(user);
+    await this.pool.query(
+      `INSERT INTO users (
+         id,
+         email,
+         display_name,
+         avatar_url,
+         region,
+         roles,
+         trust_score,
+         proxy_level,
+         verification,
+         privacy,
+         created_at,
+         updated_at
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+      [
+        payload.id,
+        payload.email,
+        payload.displayName,
+        payload.avatarUrl,
+        payload.region,
+        payload.roles,
+        payload.trustScore,
+        payload.proxyLevel,
+        payload.verification,
+        payload.privacy,
+        payload.createdAt,
+        payload.updatedAt
+      ]
+    );
+    return user;
+  }
+
+  async saveUser(user: User): Promise<User> {
+    const payload = serializeUser(user);
+    const result = await this.pool.query(
+      `UPDATE users
+       SET email = $1,
+           display_name = $2,
+           avatar_url = $3,
+           region = $4,
+           roles = $5,
+           trust_score = $6,
+           proxy_level = $7,
+           verification = $8,
+           privacy = $9,
+           created_at = $10,
+           updated_at = $11
+       WHERE id = $12`,
+      [
+        payload.email,
+        payload.displayName,
+        payload.avatarUrl,
+        payload.region,
+        payload.roles,
+        payload.trustScore,
+        payload.proxyLevel,
+        payload.verification,
+        payload.privacy,
+        payload.createdAt,
+        payload.updatedAt,
+        payload.id
+      ]
+    );
+    if (result.rowCount === 0) {
+      throw new Error("User not found");
+    }
+    return user;
   }
 
   async createMatch(match: Match): Promise<Match> {
@@ -439,15 +518,22 @@ function mapSeason(row: Record<string, unknown>): Season {
 }
 
 function mapUser(row: Record<string, unknown>): User {
+  const proxyFallback = { level: 1, xp: 0, nextXp: 100 };
+  const privacyFallback = { showUidPublicly: false, showMatchHistoryPublicly: true };
+  const verificationFallback = { status: "UNVERIFIED" as const };
   return {
     id: String(row.id),
-    handle: String(row.handle),
+    email: String(row.email ?? ""),
     displayName: String(row.display_name),
-    region: String(row.region),
-    roles: (row.roles as User["roles"]) ?? [],
+    avatarUrl: (row.avatar_url as string | null) ?? null,
+    region: String(row.region) as User["region"],
+    createdAt: toNumber(row.created_at),
+    updatedAt: toNumber(row.updated_at),
+    roles: parseJson<User["roles"]>(row.roles, []),
     trustScore: Number(row.trust_score),
-    proxyLevel: Number(row.proxy_level),
-    verifiedStatus: row.verified_status as User["verifiedStatus"]
+    proxyLevel: normalizeProxyLevel(row.proxy_level, proxyFallback),
+    verification: parseJson<User["verification"]>(row.verification, verificationFallback),
+    privacy: parseJson<User["privacy"]>(row.privacy, privacyFallback)
   };
 }
 
@@ -544,6 +630,23 @@ function serializeMatch(match: Match) {
   };
 }
 
+function serializeUser(user: User) {
+  return {
+    id: user.id,
+    email: user.email,
+    displayName: user.displayName,
+    avatarUrl: user.avatarUrl ?? null,
+    region: user.region,
+    roles: toJson(user.roles),
+    trustScore: user.trustScore,
+    proxyLevel: toJson(user.proxyLevel),
+    verification: toJson(user.verification),
+    privacy: toJson(user.privacy),
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
+  };
+}
+
 function toNumber(value: unknown): number {
   if (typeof value === "number") {
     return value;
@@ -555,4 +658,31 @@ function toNumber(value: unknown): number {
     }
   }
   return 0;
+}
+
+function parseJson<T>(value: unknown, fallback: T): T {
+  if (value === undefined || value === null) {
+    return fallback;
+  }
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return fallback;
+    }
+  }
+  return value as T;
+}
+
+function normalizeProxyLevel(value: unknown, fallback: User["proxyLevel"]): User["proxyLevel"] {
+  if (typeof value === "number") {
+    return { level: value, xp: 0, nextXp: Math.max(100, value * 50) };
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    if (!Number.isNaN(parsed)) {
+      return { level: parsed, xp: 0, nextXp: Math.max(100, parsed * 50) };
+    }
+  }
+  return parseJson<User["proxyLevel"]>(value, fallback);
 }

@@ -22,13 +22,54 @@ npm install
 npm run dev:api
 ```
 
-3. Run the web app
+3. Run the web app (separate terminal)
 
 ```bash
 npm run dev:web
 ```
 
 The web app expects the API at `http://localhost:4000`. Vite proxies `/api` to the API by default.
+
+## Auth (Google OAuth)
+
+The API implements Google OAuth 2.0 Authorization Code + PKCE and stores sessions in httpOnly cookies.
+
+### Quick dev mode (no Google)
+
+Set `AUTH_DISABLED=true` on the API. `/auth/me` will return the first seed user.
+
+```bash
+setx AUTH_DISABLED "true"
+```
+
+### Google OAuth setup
+
+Required environment variables (API):
+
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `GOOGLE_REDIRECT_URI` (default: `${API_ORIGIN}/auth/google/callback`)
+- `SESSION_SECRET` (random string)
+- `WEB_ORIGIN` (default: `http://localhost:5173`)
+- `API_ORIGIN` (default: `http://localhost:4000`)
+
+Optional:
+
+- `SESSION_TTL_DAYS` (default 7)
+- `AUTH_STATE_TTL_SEC` (default 600)
+
+Example (PowerShell):
+
+```powershell
+$env:GOOGLE_CLIENT_ID = "..."
+$env:GOOGLE_CLIENT_SECRET = "..."
+$env:GOOGLE_REDIRECT_URI = "http://localhost:4000/auth/google/callback"
+$env:SESSION_SECRET = "change-me"
+$env:WEB_ORIGIN = "http://localhost:5173"
+$env:API_ORIGIN = "http://localhost:4000"
+```
+
+If your web app is not using the Vite proxy, set `VITE_API_URL` in `apps/web` to your API origin.
 
 ## Postgres
 

@@ -51,14 +51,80 @@ CREATE TABLE IF NOT EXISTS seasons (
 
 CREATE TABLE IF NOT EXISTS users (
   id text PRIMARY KEY,
-  handle text NOT NULL,
+  email text NOT NULL,
   display_name text NOT NULL,
+  avatar_url text,
   region text NOT NULL,
   roles jsonb NOT NULL,
   trust_score integer NOT NULL,
-  proxy_level integer NOT NULL,
-  verified_status text NOT NULL
+  proxy_level jsonb NOT NULL,
+  verification jsonb NOT NULL,
+  privacy jsonb NOT NULL,
+  created_at bigint NOT NULL,
+  updated_at bigint NOT NULL
 );
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS email text;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url text;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS verification jsonb;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS privacy jsonb;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at bigint;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at bigint;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_name = 'users'
+      AND column_name = 'proxy_level'
+      AND data_type <> 'jsonb'
+  ) THEN
+    ALTER TABLE users
+      ALTER COLUMN proxy_level TYPE jsonb
+      USING jsonb_build_object('level', proxy_level, 'xp', 0, 'nextXp', 100);
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_name = 'users'
+      AND column_name = 'handle'
+  ) THEN
+    UPDATE users
+    SET email = COALESCE(email, handle || '@interknot.dev')
+    WHERE email IS NULL;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_name = 'users'
+      AND column_name = 'verified_status'
+  ) THEN
+    UPDATE users
+    SET verification = COALESCE(verification, jsonb_build_object('status', verified_status))
+    WHERE verification IS NULL;
+  END IF;
+END $$;
+
+UPDATE users
+SET privacy = COALESCE(privacy, jsonb_build_object('showUidPublicly', false, 'showMatchHistoryPublicly', true))
+WHERE privacy IS NULL;
+
+UPDATE users
+SET created_at = COALESCE(created_at, CAST(EXTRACT(EPOCH FROM NOW()) * 1000 AS bigint))
+WHERE created_at IS NULL;
+
+UPDATE users
+SET updated_at = COALESCE(updated_at, created_at)
+WHERE updated_at IS NULL;
 
 CREATE TABLE IF NOT EXISTS ratings (
   user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -67,6 +133,23 @@ CREATE TABLE IF NOT EXISTS ratings (
   provisional_matches integer NOT NULL,
   updated_at bigint NOT NULL,
   PRIMARY KEY (user_id, league_id)
+);
+
+CREATE TABLE IF NOT EXISTS oauth_accounts (
+  provider text NOT NULL,
+  provider_account_id text NOT NULL,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  email text NOT NULL,
+  created_at bigint NOT NULL,
+  updated_at bigint NOT NULL,
+  PRIMARY KEY (provider, provider_account_id)
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id text PRIMARY KEY,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at bigint NOT NULL,
+  expires_at bigint NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS queues (
@@ -122,3 +205,4 @@ CREATE INDEX IF NOT EXISTS idx_matches_state ON matches (state);
 CREATE INDEX IF NOT EXISTS idx_matchmaking_queue_queue ON matchmaking_queue (queue_id);
 CREATE INDEX IF NOT EXISTS idx_matchmaking_queue_status ON matchmaking_queue (status);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_matchmaking_queue_user_queue ON matchmaking_queue (queue_id, user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users (email);

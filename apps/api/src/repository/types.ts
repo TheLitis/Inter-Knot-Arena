@@ -38,8 +38,11 @@ export interface Repository {
   findRuleset(rulesetId: string): Promise<Ruleset>;
   findQueue(queueId: string): Promise<QueueConfig>;
   findUser(userId: string): Promise<User>;
+  findUserByEmail(email: string): Promise<User | null>;
   findOpponent(userId: string): Promise<User | null>;
   findMatch(matchId: string): Promise<Match>;
+  createUser(user: User): Promise<User>;
+  saveUser(user: User): Promise<User>;
   createMatch(match: Match): Promise<Match>;
   saveMatch(match: Match): Promise<Match>;
   listMatchmakingEntries(): Promise<MatchmakingEntry[]>;
