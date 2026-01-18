@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Info, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Check, CheckCircle2, Copy, Image, Info, LogOut, ShieldAlert, ShieldCheck } from "lucide-react";
 import { updateMe } from "../api";
 import { useAuth } from "../auth/AuthProvider";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
@@ -17,15 +18,20 @@ interface ToastState {
   message: string;
 }
 
+type SaveState = "idle" | "saving" | "saved";
+
 export default function Settings() {
-  const { user, isLoading, setUser } = useAuth();
+  const { user, isLoading, setUser, logout } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [region, setRegion] = useState("OTHER");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [showUidPublicly, setShowUidPublicly] = useState(false);
   const [showMatchHistoryPublicly, setShowMatchHistoryPublicly] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
   const [toast, setToast] = useState<ToastState | null>(null);
+  const [showAvatarOptions, setShowAvatarOptions] = useState(false);
+  const [showAvatarUrlInput, setShowAvatarUrlInput] = useState(false);
+  const [googleAvatarUrl, setGoogleAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -34,8 +40,12 @@ export default function Settings() {
     setDisplayName(user.displayName);
     setRegion(user.region);
     setAvatarUrl(user.avatarUrl ?? "");
+    setGoogleAvatarUrl(user.avatarUrl ?? null);
     setShowUidPublicly(user.privacy.showUidPublicly);
     setShowMatchHistoryPublicly(user.privacy.showMatchHistoryPublicly);
+    setShowAvatarOptions(false);
+    setShowAvatarUrlInput(false);
+    setSaveState("idle");
   }, [user]);
 
   useEffect(() => {
@@ -53,6 +63,67 @@ export default function Settings() {
     return Math.min(100, Math.round((user.proxyLevel.xp / user.proxyLevel.nextXp) * 100));
   }, [user]);
 
+  const trustTier = useMemo(() => {
+    if (!user) {
+      return "Neutral";
+    }
+    if (user.trustScore >= 130) {
+      return "Trusted";
+    }
+    if (user.trustScore >= 90) {
+      return "Neutral";
+    }
+    return "At risk";
+  }, [user]);
+
+  const nextUnlock = useMemo(() => {
+    if (!user) {
+      return { level: 5, label: "Ranked access" };
+    }
+    const level = user.proxyLevel.level;
+    if (level < 5) {
+      return { level: 5, label: "Ranked access" };
+    }
+    if (level < 10) {
+      return { level: 10, label: "Judge eligibility" };
+    }
+    if (level < 20) {
+      return { level: 20, label: "Advanced queues" };
+    }
+    return { level: 30, label: "Seasonal badges" };
+  }, [user]);
+
+  const isDirty = useMemo(() => {
+    if (!user) {
+      return false;
+    }
+    const normalizedAvatar = avatarUrl.trim();
+    const userAvatar = user.avatarUrl ?? "";
+    return (
+      displayName.trim() !== user.displayName ||
+      region !== user.region ||
+      normalizedAvatar !== userAvatar ||
+      showUidPublicly !== user.privacy.showUidPublicly ||
+      showMatchHistoryPublicly !== user.privacy.showMatchHistoryPublicly
+    );
+  }, [user, displayName, region, avatarUrl, showUidPublicly, showMatchHistoryPublicly]);
+
+  useEffect(() => {
+    if (saveState !== "saved") {
+      return;
+    }
+    const timer = window.setTimeout(() => setSaveState("idle"), 2000);
+    return () => window.clearTimeout(timer);
+  }, [saveState]);
+
+  useEffect(() => {
+    if (saveState === "saved" && isDirty) {
+      setSaveState("idle");
+    }
+  }, [isDirty, saveState]);
+
+  const isSaving = saveState === "saving";
+
   if (isLoading) {
     return <div className="card">Loading settings...</div>;
   }
@@ -60,6 +131,18 @@ export default function Settings() {
   if (!user) {
     return <div className="card">Sign in required.</div>;
   }
+
+  const handleCopyAvatar = async () => {
+    if (!avatarUrl.trim()) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(avatarUrl.trim());
+      setToast({ type: "success", message: "Avatar URL copied." });
+    } catch {
+      setToast({ type: "error", message: "Unable to copy URL." });
+    }
+  };
 
   const handleSave = async () => {
     if (!displayName.trim()) {
@@ -95,17 +178,17 @@ export default function Settings() {
       updatedAt: Date.now()
     };
 
-    setIsSaving(true);
+    setSaveState("saving");
     setUser(optimistic);
     try {
       const updated = await updateMe(payload);
       setUser(updated);
       setToast({ type: "success", message: "Profile updated." });
+      setSaveState("saved");
     } catch {
       setUser(previous);
       setToast({ type: "error", message: "Failed to save changes." });
-    } finally {
-      setIsSaving(false);
+      setSaveState("idle");
     }
   };
 
@@ -173,6 +256,12 @@ export default function Settings() {
                 </Tooltip>
               </div>
               <div className="mt-2 text-2xl font-semibold text-ink-900">{user.trustScore}</div>
+              <div className="text-xs text-ink-500">Trust {trustTier}</div>
+              <ul className="mt-3 space-y-1 text-xs text-ink-500">
+                <li>+ Completed matches without disputes</li>
+                <li>+ UID verification and verifier compliance</li>
+                <li>- No-shows or repeated disputes</li>
+              </ul>
             </div>
 
             <div className="rounded-lg border border-border bg-ika-700/40 p-4">
@@ -189,6 +278,12 @@ export default function Settings() {
               <div className="mt-2">
                 <Progress value={proxyProgress} />
               </div>
+              <div className="mt-2 text-xs text-ink-500">
+                Next unlock at level {nextUnlock.level}: {nextUnlock.label}.
+              </div>
+              <div className="mt-1 text-xs text-ink-500">
+                Earn XP by: completing matches, verifying UID, judging disputes.
+              </div>
             </div>
 
             <div className="rounded-lg border border-border bg-ika-700/40 p-4">
@@ -200,13 +295,26 @@ export default function Settings() {
               {user.verification.uid ? (
                 <div className="mt-1 text-xs text-ink-500">UID: {user.verification.uid}</div>
               ) : null}
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <div className="text-xs text-ink-500">Required for ranked queues.</div>
+                {user.verification.status !== "VERIFIED" ? (
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/uid-verify">Verify UID</Link>
+                  </Button>
+                ) : null}
+              </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-border bg-ika-800/70">
-          <CardHeader>
+          <CardHeader className="flex-row items-center justify-between">
             <CardTitle className="text-lg font-sans text-ink-900">Profile editor</CardTitle>
+            {isDirty ? (
+              <Badge className="border border-accent-400/30 bg-accent-600/10 text-accent-400">
+                Unsaved
+              </Badge>
+            ) : null}
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
@@ -227,47 +335,128 @@ export default function Settings() {
                     </option>
                   ))}
                 </select>
+                <div className="mt-2 text-xs text-ink-500">Used for matchmaking queues.</div>
               </div>
             </div>
 
-            <div>
-              <label className="text-xs uppercase tracking-[0.2em] text-ink-500">Avatar URL</label>
-              <Input
-                value={avatarUrl}
-                onChange={(event) => setAvatarUrl(event.target.value)}
-                placeholder="https://..."
-              />
+            <div className="rounded-lg border border-border bg-ika-700/40 p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-ink-500">Avatar</div>
+                  <div className="text-xs text-ink-500">Use your account avatar or paste an image URL.</div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAvatarOptions((prev) => !prev)}
+                >
+                  <Image className="mr-2 h-4 w-4" />
+                  {showAvatarOptions ? "Close" : "Change avatar"}
+                </Button>
+              </div>
+              <div className="mt-4 flex items-center gap-4">
+                <Avatar className="h-14 w-14">
+                  {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
+                  <AvatarFallback>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-ink-900">{displayName}</div>
+                  {avatarUrl ? (
+                    <div className="mt-1 flex items-center gap-2 text-xs text-ink-500">
+                      <span className="max-w-[220px] truncate">{avatarUrl}</span>
+                      <button
+                        type="button"
+                        className="inline-flex items-center text-ink-500 hover:text-ink-900"
+                        onClick={handleCopyAvatar}
+                        aria-label="Copy avatar URL"
+                        title="Copy avatar URL"
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-1 text-xs text-ink-500">No avatar set.</div>
+                  )}
+                </div>
+              </div>
+              {showAvatarOptions ? (
+                <div className="mt-4 grid gap-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setAvatarUrl(googleAvatarUrl ?? "")}
+                      disabled={!googleAvatarUrl}
+                    >
+                      Use account avatar
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAvatarUrlInput((prev) => !prev)}
+                    >
+                      {showAvatarUrlInput ? "Hide URL" : "Paste image URL"}
+                    </Button>
+                  </div>
+                  {showAvatarUrlInput ? (
+                    <Input
+                      value={avatarUrl}
+                      onChange={(event) => setAvatarUrl(event.target.value)}
+                      placeholder="https://..."
+                    />
+                  ) : null}
+                </div>
+              ) : null}
             </div>
 
             <div className="grid gap-3 rounded-lg border border-border bg-ika-700/40 p-4">
               <div className="text-xs uppercase tracking-[0.2em] text-ink-500">Privacy</div>
-              <label className="flex items-center justify-between gap-4 text-sm text-ink-900">
-                Show UID publicly
-                <input
-                  type="checkbox"
-                  checked={showUidPublicly}
-                  onChange={(event) => setShowUidPublicly(event.target.checked)}
-                  className="h-4 w-4 accent-accent-400"
-                />
-              </label>
-              <label className="flex items-center justify-between gap-4 text-sm text-ink-900">
-                Show match history publicly
-                <input
-                  type="checkbox"
-                  checked={showMatchHistoryPublicly}
-                  onChange={(event) => setShowMatchHistoryPublicly(event.target.checked)}
-                  className="h-4 w-4 accent-accent-400"
-                />
-              </label>
-              <div className="text-xs text-ink-500">
-                Ranked history is still visible to judges and disputes.
+              <ToggleRow
+                label="Show UID publicly"
+                description="UID is visible on your public profile."
+                checked={showUidPublicly}
+                onChange={setShowUidPublicly}
+              />
+              <ToggleRow
+                label="Show match history publicly"
+                description="Ranked history remains visible to judges and disputes."
+                checked={showMatchHistoryPublicly}
+                onChange={setShowMatchHistoryPublicly}
+              />
+            </div>
+
+            <div className="rounded-lg border border-border bg-ika-700/30 p-4">
+              <div className="text-xs uppercase tracking-[0.2em] text-ink-500">Danger zone</div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button variant="secondary" size="sm" onClick={() => logout()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </Button>
+                <Button variant="destructive" size="sm" disabled>
+                  <ShieldAlert className="mr-2 h-4 w-4" />
+                  Delete account (MVP)
+                </Button>
+              </div>
+              <div className="mt-2 text-xs text-ink-500">
+                Account deletion requires manual support in MVP.
               </div>
             </div>
 
             <div className="flex items-center justify-between border-t border-border pt-4">
-              <div className="text-xs text-ink-500">Changes are saved to your account profile.</div>
-              <Button onClick={handleSave} disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save changes"}
+              <div className="text-xs text-ink-500">
+                {isDirty ? "Unsaved changes." : "All changes saved."}
+              </div>
+              <Button onClick={handleSave} disabled={isSaving || !isDirty}>
+                {saveState === "saved" ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Saved
+                  </>
+                ) : saveState === "saving" ? (
+                  "Saving..."
+                ) : (
+                  "Save changes"
+                )}
               </Button>
             </div>
           </CardContent>
@@ -284,4 +473,40 @@ function isValidUrl(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+function ToggleRow({
+  label,
+  description,
+  checked,
+  onChange
+}: {
+  label: string;
+  description: string;
+  checked: boolean;
+  onChange: (value: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative h-6 w-11 rounded-full border border-border transition ${
+          checked ? "bg-accent-500/70" : "bg-ika-800/80"
+        }`}
+      >
+        <span
+          className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-ink-900 transition ${
+            checked ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
+      </button>
+      <div>
+        <div className="text-sm font-semibold text-ink-900">{label}</div>
+        <div className="text-xs text-ink-500">{description}</div>
+      </div>
+    </div>
+  );
 }
