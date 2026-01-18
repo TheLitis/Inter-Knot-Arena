@@ -16,6 +16,7 @@ export interface EvidenceItem {
 interface EvidencePanelProps {
   verifierRequired: string[];
   lastPrecheck: string;
+  lastPrecheckStatus?: "PASS" | "FAIL" | "NONE";
   inrunViolations: number;
   evidenceItems: EvidenceItem[];
   retentionInfo: string;
@@ -24,10 +25,15 @@ interface EvidencePanelProps {
 export function EvidencePanel({
   verifierRequired,
   lastPrecheck,
+  lastPrecheckStatus,
   inrunViolations,
   evidenceItems,
   retentionInfo
 }: EvidencePanelProps) {
+  const precheckStatus =
+    lastPrecheckStatus ?? (lastPrecheck.toLowerCase().includes("no") ? "NONE" : "PASS");
+  const precheckLabel = precheckStatus === "NONE" ? "Pending" : precheckStatus;
+
   return (
     <Card className="border-border bg-ika-800/70">
       <CardHeader>
@@ -51,7 +57,7 @@ export function EvidencePanel({
               <CheckCircle2 className="h-4 w-4" />
               Last pre-check
             </div>
-            <div className="mt-2 text-sm font-semibold text-ink-900">PASS</div>
+            <div className="mt-2 text-sm font-semibold text-ink-900">{precheckLabel}</div>
             <p className="text-xs text-ink-500">{lastPrecheck}</p>
           </div>
           <div className="rounded-lg border border-border bg-ika-700/40 p-4">
@@ -89,31 +95,39 @@ export function EvidencePanel({
             </Button>
           </div>
           <div className="mt-4 space-y-3">
-            {evidenceItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-ika-800/60 px-4 py-3"
-              >
-                <div>
-                  <div className="text-sm font-semibold text-ink-900">{item.type}</div>
-                  <div className="text-xs text-ink-500">{item.match} - {item.date}</div>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="text-xs text-ink-500">Retention: {item.retention}</div>
-                  <Badge
-                    className={
-                      item.status === "Stored"
-                        ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                        : item.status === "Expiring"
-                        ? "border border-amber-500/30 bg-amber-500/10 text-amber-200"
-                        : "border border-rose-500/30 bg-rose-500/10 text-rose-300"
-                    }
-                  >
-                    {item.status}
-                  </Badge>
-                </div>
+            {evidenceItems.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-border bg-ika-800/40 p-4 text-sm text-ink-500">
+                No evidence stored yet.
               </div>
-            ))}
+            ) : (
+              evidenceItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-ika-800/60 px-4 py-3"
+                >
+                  <div>
+                    <div className="text-sm font-semibold text-ink-900">{item.type}</div>
+                    <div className="text-xs text-ink-500">
+                      {item.match} - {item.date}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="text-xs text-ink-500">Retention: {item.retention}</div>
+                    <Badge
+                      className={
+                        item.status === "Stored"
+                          ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                          : item.status === "Expiring"
+                          ? "border border-amber-500/30 bg-amber-500/10 text-amber-200"
+                          : "border border-rose-500/30 bg-rose-500/10 text-rose-300"
+                      }
+                    >
+                      {item.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </CardContent>

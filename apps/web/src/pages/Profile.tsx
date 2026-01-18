@@ -247,13 +247,13 @@ export default function Profile() {
       expectedWinrate: "-"
     };
   }, [ratingByType]);
+
   const proxyLevel = profileUser?.proxyLevel.level ?? 0;
   const proxyCap = 60;
   const proxyProgress = profileUser
     ? Math.min(100, Math.round((profileUser.proxyLevel.xp / profileUser.proxyLevel.nextXp) * 100))
     : 0;
   const trustScore = profileUser?.trustScore ?? 0;
-  const hasProfileData = Boolean(profileUser);
 
   const matchHistory: MatchItem[] = [];
   const topAgents: AgentUsage[] = [];
@@ -517,36 +517,37 @@ export default function Profile() {
             <MatchTable matches={matchHistory} />
           </TabsContent>
 
-            <TabsContent value="draft">
-              <DraftStats
-                banFrequency="-"
-                pickFrequency="-"
-                draftWinrate={0}
-                matchWinrate={0}
-                pickSuccess="-"
-                bans={[]}
-                bansAgainst={[]}
-                sequences={[]}
-              />
-            </TabsContent>
+          <TabsContent value="draft">
+            <DraftStats
+              banFrequency="-"
+              pickFrequency="-"
+              draftWinrate={0}
+              matchWinrate={0}
+              pickSuccess="-"
+              bans={[]}
+              bansAgainst={[]}
+              sequences={[]}
+            />
+          </TabsContent>
 
           <TabsContent value="agents">
             <AgentGrid agents={rosterAgents} />
           </TabsContent>
 
-            <TabsContent value="tournaments">
-              <TournamentsPanel upcoming={upcomingTournaments} past={pastTournaments} />
-            </TabsContent>
+          <TabsContent value="tournaments">
+            <TournamentsPanel upcoming={upcomingTournaments} past={pastTournaments} />
+          </TabsContent>
 
-            <TabsContent value="evidence">
-              <EvidencePanel
-                verifierRequired={["Standard", "F2P"]}
-                lastPrecheck="No checks yet"
-                inrunViolations={0}
-                evidenceItems={evidenceItems}
-                retentionInfo="Crops retained 14 days. Result proof retained 30 days."
-              />
-            </TabsContent>
+          <TabsContent value="evidence">
+            <EvidencePanel
+              verifierRequired={["Standard", "F2P"]}
+              lastPrecheck="No checks yet"
+              lastPrecheckStatus="NONE"
+              inrunViolations={0}
+              evidenceItems={evidenceItems}
+              retentionInfo="Crops retained 14 days. Result proof retained 30 days."
+            />
+          </TabsContent>
         </Tabs>
       </div>
     </TooltipProvider>
