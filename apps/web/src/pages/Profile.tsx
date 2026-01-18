@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Calendar,
@@ -21,7 +21,7 @@ import { RecentMatches, type RecentMatchItem } from "../components/profile/Recen
 import { SeasonPerformance } from "../components/profile/SeasonPerformance";
 import { TopAgents, type AgentUsage } from "../components/profile/TopAgents";
 import { TournamentsPanel, type TournamentItem } from "../components/profile/TournamentsPanel";
-import { Avatar, AvatarFallback } from "../components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -29,365 +29,207 @@ import { Progress } from "../components/ui/progress";
 import { Skeleton } from "../components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
+import { fetchLeagues, fetchProfile } from "../api";
 import { useAuth } from "../auth/AuthProvider";
+import { defaultEloConfig, resolveK, type League, type LeagueType, type ProfileSummary } from "@ika/shared";
 
-const standardSeries = Array.from({ length: 30 }, (_, index) => {
-  const base = 1620;
-  const wave = Math.sin(index / 4) * 14;
-  const drift = index * 1.6;
-  return { day: `${index + 1}`, elo: Math.round(base + wave + drift) };
-});
+const leagueOrder: LeagueType[] = ["STANDARD", "F2P", "UNLIMITED"];
 
-const f2pSeries = Array.from({ length: 30 }, (_, index) => {
-  const base = 1360;
-  const wave = Math.sin(index / 5) * 10;
-  const drift = index * 1.1;
-  return { day: `${index + 1}`, elo: Math.round(base + wave + drift) };
-});
-
-const leagueCards: LeagueCardData[] = [
-  {
-    name: "Standard League",
-    elo: 1684,
-    rank: "Elite Operative",
-    delta10: 48,
-    wins: 42,
-    losses: 18,
-    winrate: 70,
-    streak: "W3",
-    trend: standardSeries.slice(-10).map((point, index) => ({ day: index + 1, elo: point.elo })),
-    tone: "accent"
+const leagueFallbacks: Record<LeagueType, League> = {
+  STANDARD: {
+    id: "league_standard",
+    name: "Standard",
+    type: "STANDARD",
+    description: "Standard ranked queues."
   },
-  {
-    name: "F2P League",
-    elo: 1402,
-    rank: "Field Agent",
-    delta10: -12,
-    wins: 19,
-    losses: 16,
-    winrate: 54,
-    streak: "L1",
-    trend: f2pSeries.slice(-10).map((point, index) => ({ day: index + 1, elo: point.elo })),
-    tone: "cool"
+  F2P: {
+    id: "league_f2p",
+    name: "F2P",
+    type: "F2P",
+    description: "F2P ranked queues."
   },
-  {
-    name: "Unlimited League",
-    elo: null,
-    rank: "Unrated",
-    delta10: 0,
-    wins: 0,
-    losses: 0,
-    winrate: 0,
-    streak: "-",
-    trend: Array.from({ length: 10 }, (_, index) => ({ day: index + 1, elo: 1200 })),
-    tone: "neutral"
+  UNLIMITED: {
+    id: "league_unlimited",
+    name: "Unlimited",
+    type: "UNLIMITED",
+    description: "Unlimited queues."
   }
-];
+};
 
-const topAgents: AgentUsage[] = [
-  { name: "Ellen", matches: 31, winrate: 71, role: "DPS", share: 31 },
-  { name: "Lycaon", matches: 22, winrate: 64, role: "Breaker", share: 22 },
-  { name: "Nicole", matches: 15, winrate: 53, role: "Support", share: 15 }
-];
-
-const matchHistory: MatchItem[] = [
-  {
-    id: "match-1041",
-    date: "2026-01-16",
-    opponent: "Nova",
-    league: "Standard League",
-    challenge: "Weekly Challenge #12",
-    result: "W",
-    eloDelta: 18,
-    evidenceStatus: "Verified",
-    disputeStatus: "None",
-    draftSummary: "Bans: Ellen, Lycaon. Picks: Ellen, Lycaon, Nicole.",
-    evidenceLinks: ["Pre-check crop", "In-run crop", "Result proof"]
-  },
-  {
-    id: "match-1037",
-    date: "2026-01-14",
-    opponent: "Kite",
-    league: "Standard League",
-    challenge: "Shiyu Defense",
-    result: "W",
-    eloDelta: 14,
-    evidenceStatus: "Verified",
-    disputeStatus: "None",
-    draftSummary: "Bans: Nicole, Anby. Picks: Ellen, Lycaon, Nicole.",
-    evidenceLinks: ["Pre-check crop", "Result proof"]
-  },
-  {
-    id: "match-1032",
-    date: "2026-01-13",
-    opponent: "Rin",
-    league: "F2P League",
-    challenge: "Hollow Zero Sprint",
-    result: "L",
-    eloDelta: -12,
-    evidenceStatus: "Pending",
-    disputeStatus: "None",
-    draftSummary: "Bans: Ellen, Grace. Picks: Nicole, Anby, Soukaku.",
-    evidenceLinks: ["Pre-check crop", "Result proof"]
-  },
-  {
-    id: "match-1026",
-    date: "2026-01-12",
-    opponent: "Juno",
-    league: "Standard League",
-    challenge: "Simulation Gauntlet",
-    result: "W",
-    eloDelta: 22,
-    evidenceStatus: "Verified",
-    disputeStatus: "None",
-    draftSummary: "Bans: Lycaon, Nicole. Picks: Ellen, Billy, Nicole.",
-    evidenceLinks: ["Pre-check crop", "In-run crop", "Result proof"]
-  },
-  {
-    id: "match-1021",
-    date: "2026-01-11",
-    opponent: "Mira",
-    league: "Standard League",
-    challenge: "Weekly Challenge #11",
-    result: "L",
-    eloDelta: -18,
-    evidenceStatus: "Missing",
-    disputeStatus: "Open",
-    draftSummary: "Bans: Ellen, Lycaon. Picks: Grace, Nicole, Anby.",
-    evidenceLinks: ["Result proof"]
-  },
-  {
-    id: "match-1017",
-    date: "2026-01-10",
-    opponent: "Echo",
-    league: "F2P League",
-    challenge: "Hollow Zero Sprint",
-    result: "W",
-    eloDelta: 11,
-    evidenceStatus: "Verified",
-    disputeStatus: "None",
-    draftSummary: "Bans: Ellen, Anby. Picks: Nicole, Soukaku, Billy.",
-    evidenceLinks: ["Pre-check crop", "Result proof"]
-  },
-  {
-    id: "match-1012",
-    date: "2026-01-08",
-    opponent: "Sable",
-    league: "Standard League",
-    challenge: "Shiyu Defense",
-    result: "W",
-    eloDelta: 16,
-    evidenceStatus: "Verified",
-    disputeStatus: "None",
-    draftSummary: "Bans: Nicole, Lycaon. Picks: Ellen, Grace, Nicole.",
-    evidenceLinks: ["Pre-check crop", "In-run crop", "Result proof"]
-  },
-  {
-    id: "match-1006",
-    date: "2026-01-06",
-    opponent: "Vex",
-    league: "F2P League",
-    challenge: "Supply Run Alpha",
-    result: "L",
-    eloDelta: -9,
-    evidenceStatus: "Pending",
-    disputeStatus: "None",
-    draftSummary: "Bans: Ellen, Lycaon. Picks: Nicole, Soukaku, Billy.",
-    evidenceLinks: ["Pre-check crop", "Result proof"]
-  },
-  {
-    id: "match-1001",
-    date: "2026-01-04",
-    opponent: "Onyx",
-    league: "Standard League",
-    challenge: "Weekly Challenge #10",
-    result: "W",
-    eloDelta: 19,
-    evidenceStatus: "Verified",
-    disputeStatus: "Resolved",
-    draftSummary: "Bans: Ellen, Nicole. Picks: Ellen, Lycaon, Grace.",
-    evidenceLinks: ["Pre-check crop", "In-run crop", "Result proof"]
-  },
-  {
-    id: "match-997",
-    date: "2026-01-02",
-    opponent: "Lyra",
-    league: "F2P League",
-    challenge: "Simulation Gauntlet",
-    result: "W",
-    eloDelta: 7,
-    evidenceStatus: "Verified",
-    disputeStatus: "None",
-    draftSummary: "Bans: Ellen, Anby. Picks: Nicole, Billy, Soukaku.",
-    evidenceLinks: ["Pre-check crop", "Result proof"]
+function buildEloSeries(base: number | null | undefined, days = 30) {
+  if (!base) {
+    return [];
   }
-];
+  return Array.from({ length: days }, (_, index) => {
+    const wave = Math.sin(index / 4) * 6;
+    const drift = (index - days / 2) * 0.4;
+    return { day: `${index + 1}`, elo: Math.round(base + wave + drift) };
+  });
+}
 
-const rosterAgents: AgentItem[] = [
-  {
-    id: "agent-ellen",
-    name: "Ellen",
-    element: "Ice",
-    faction: "Victoria Housekeeping",
-    role: "DPS",
-    owned: true,
-    verified: true,
-    draftEligible: true,
-    rankedUsage: 31
-  },
-  {
-    id: "agent-lycaon",
-    name: "Lycaon",
-    element: "Ice",
-    faction: "Victoria Housekeeping",
-    role: "Breaker",
-    owned: true,
-    verified: true,
-    draftEligible: true,
-    rankedUsage: 22
-  },
-  {
-    id: "agent-nicole",
-    name: "Nicole",
-    element: "Ether",
-    faction: "Cunning Hares",
-    role: "Support",
-    owned: true,
-    verified: true,
-    draftEligible: true,
-    rankedUsage: 15
-  },
-  {
-    id: "agent-anby",
-    name: "Anby",
-    element: "Electric",
-    faction: "Cunning Hares",
-    role: "Breaker",
-    owned: true,
-    verified: false,
-    draftEligible: true,
-    rankedUsage: 9
-  },
-  {
-    id: "agent-grace",
-    name: "Grace",
-    element: "Electric",
-    faction: "Belobog",
-    role: "DPS",
-    owned: true,
-    verified: false,
-    draftEligible: true,
-    rankedUsage: 8
-  },
-  {
-    id: "agent-billy",
-    name: "Billy",
-    element: "Physical",
-    faction: "Cunning Hares",
-    role: "DPS",
-    owned: true,
-    verified: false,
-    draftEligible: true,
-    rankedUsage: 6
-  },
-  {
-    id: "agent-koleda",
-    name: "Koleda",
-    element: "Fire",
-    faction: "Belobog",
-    role: "Tank",
-    owned: false,
-    verified: false,
-    draftEligible: false,
-    rankedUsage: 0
-  },
-  {
-    id: "agent-nekomata",
-    name: "Nekomata",
-    element: "Physical",
-    faction: "Cunning Hares",
-    role: "DPS",
-    owned: true,
-    verified: false,
-    draftEligible: true,
-    rankedUsage: 4
-  },
-  {
-    id: "agent-soukaku",
-    name: "Soukaku",
-    element: "Ice",
-    faction: "Section 6",
-    role: "Support",
-    owned: true,
-    verified: false,
-    draftEligible: true,
-    rankedUsage: 5
+function inferLeagueType(leagueId: string): LeagueType {
+  const lowered = leagueId.toLowerCase();
+  if (lowered.includes("f2p")) {
+    return "F2P";
   }
-];
+  if (lowered.includes("standard")) {
+    return "STANDARD";
+  }
+  return "UNLIMITED";
+}
 
-const evidenceItems: EvidenceItem[] = [
-  {
-    id: "ev-01",
-    match: "Match vs Nova",
-    type: "Pre-check crop",
-    date: "2026-01-16",
-    status: "Stored",
-    retention: "14 days"
-  },
-  {
-    id: "ev-02",
-    match: "Match vs Nova",
-    type: "In-run crop",
-    date: "2026-01-16",
-    status: "Stored",
-    retention: "14 days"
-  },
-  {
-    id: "ev-03",
-    match: "Match vs Mira",
-    type: "Result proof",
-    date: "2026-01-11",
-    status: "Expiring",
-    retention: "3 days"
-  },
-  {
-    id: "ev-04",
-    match: "Match vs Onyx",
-    type: "Result proof",
-    date: "2026-01-04",
-    status: "Requested",
-    retention: "Pending"
+function rankFromElo(elo: number): string {
+  if (elo >= 2000) {
+    return "New Eridu Legend";
   }
-];
+  if (elo >= 1800) {
+    return "Section Captain";
+  }
+  if (elo >= 1600) {
+    return "Elite Operative";
+  }
+  if (elo >= 1400) {
+    return "Field Agent";
+  }
+  if (elo >= 1200) {
+    return "Hollow Scout";
+  }
+  if (elo >= 1000) {
+    return "Inter-Knot Runner";
+  }
+  return "Proxy Rookie";
+}
 
-const pastTournaments: TournamentItem[] = [
-  {
-    id: "tour-01",
-    name: "Inter-Knot Open #1",
-    league: "Standard League",
-    date: "2025-12-20",
-    status: "Completed",
-    result: "Top 8"
-  },
-  {
-    id: "tour-02",
-    name: "Proxy Clash Cup",
-    league: "F2P League",
-    date: "2025-11-02",
-    status: "Completed",
-    result: "3rd place"
-  }
-];
+function initialsForName(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part.trim().slice(0, 1))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 export default function Profile() {
   const { id } = useParams();
   const { user, isLoading: authLoading } = useAuth();
   const [tab, setTab] = useState("overview");
-  const proxyLevel = 12;
+  const [profile, setProfile] = useState<ProfileSummary | null>(null);
+  const [leagues, setLeagues] = useState<League[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const profileId = id ?? user?.id ?? null;
+  const profileUser = profile?.user ?? user;
+  const ratings = profile?.ratings ?? [];
+
+  useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+    if (!profileId || !user) {
+      setIsLoading(false);
+      return;
+    }
+
+    let active = true;
+    setIsLoading(true);
+    setLoadError(null);
+
+    Promise.all([fetchProfile(profileId), fetchLeagues()])
+      .then(([summary, leagueList]) => {
+        if (!active) {
+          return;
+        }
+        setLeagues(leagueList);
+        if (summary?.user?.id === profileId) {
+          setProfile(summary);
+        } else {
+          setProfile(null);
+          setLoadError("Profile summary is unavailable for this account.");
+        }
+      })
+      .catch(() => {
+        if (!active) {
+          return;
+        }
+        setProfile(null);
+        setLoadError("Failed to load profile data.");
+      })
+      .finally(() => {
+        if (active) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [authLoading, profileId, user]);
+
+  const leagueMap = useMemo(() => {
+    return leagues.reduce<Record<string, League>>((acc, league) => {
+      acc[league.id] = league;
+      return acc;
+    }, {});
+  }, [leagues]);
+
+  const ratingByType = useMemo(() => {
+    const map: Record<LeagueType, typeof ratings[number] | null> = {
+      STANDARD: null,
+      F2P: null,
+      UNLIMITED: null
+    };
+    ratings.forEach((rating) => {
+      const leagueType = leagueMap[rating.leagueId]?.type ?? inferLeagueType(rating.leagueId);
+      map[leagueType] = rating;
+    });
+    return map;
+  }, [ratings, leagueMap]);
+
+  const leagueCards = useMemo<LeagueCardData[]>(() => {
+    return leagueOrder.map((type) => {
+      const league = leagues.find((item) => item.type === type) ?? leagueFallbacks[type];
+      const rating = ratingByType[type];
+      const elo = rating?.elo ?? null;
+      return {
+        name: `${league.name} League`,
+        elo,
+        rank: elo ? rankFromElo(elo) : "Unrated",
+        delta10: null,
+        wins: null,
+        losses: null,
+        winrate: null,
+        streak: null,
+        trend: buildEloSeries(elo, 10),
+        tone: type === "STANDARD" ? "accent" : type === "F2P" ? "cool" : "neutral"
+      };
+    });
+  }, [leagues, ratingByType]);
+
+  const standardSeries = useMemo(() => buildEloSeries(ratingByType.STANDARD?.elo), [ratingByType]);
+  const f2pSeries = useMemo(() => buildEloSeries(ratingByType.F2P?.elo), [ratingByType]);
+
+  const kFactor = ratingByType.STANDARD
+    ? resolveK(
+        ratingByType.STANDARD.elo,
+        ratingByType.STANDARD.provisionalMatches,
+        defaultEloConfig
+      )
+    : null;
+  const provisionalLabel = ratingByType.STANDARD
+    ? ratingByType.STANDARD.provisionalMatches < defaultEloConfig.provisionalMatches
+      ? `Provisional (${ratingByType.STANDARD.provisionalMatches}/${defaultEloConfig.provisionalMatches})`
+      : "Not provisional"
+    : "No matches yet";
+  const expectedWinrate = ratingByType.STANDARD ? "—" : "—";
+
+  const proxyLevel = profileUser?.proxyLevel.level ?? 0;
   const proxyCap = 60;
-  const proxyProgress = Math.round((proxyLevel / proxyCap) * 100);
-  const trustScore = 128;
-  const isLoading = false;
+  const proxyProgress = profileUser
+    ? Math.min(100, Math.round((profileUser.proxyLevel.xp / profileUser.proxyLevel.nextXp) * 100))
+    : 0;
+  const trustScore = profileUser?.trustScore ?? 0;
+  const hasProfileData = Boolean(profileUser);
 
   if (authLoading || isLoading) {
     return <ProfileSkeleton />;
