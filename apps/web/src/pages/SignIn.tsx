@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Chrome, Lock, Mail, User as UserIcon } from "lucide-react";
+import { Lock, Mail, User as UserIcon } from "lucide-react";
 import { loginWithEmail, registerWithEmail, startGoogleAuth } from "../api";
 import { useAuth } from "../auth/AuthProvider";
 import { Button } from "../components/ui/button";
@@ -9,6 +9,32 @@ import { Input } from "../components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
 type Mode = "signin" | "register";
+
+const GoogleIcon = ({ className }: { className?: string }) => (
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    viewBox="0 0 48 48"
+    className={className}
+  >
+    <path
+      fill="#EA4335"
+      d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.9 2.5 30.5 0 24 0 14.7 0 6.2 4.8 2.5 13.8l7.5 5.8C12 13.8 17.5 9.5 24 9.5z"
+    />
+    <path
+      fill="#4285F4"
+      d="M46.6 24.5c0-1.5-.1-2.6-.4-3.8H24v7.1h12.7c-.3 1.7-1.7 4.3-4.8 6.1l7.4 5.7c4.4-4 7.3-10 7.3-15.1z"
+    />
+    <path
+      fill="#34A853"
+      d="M24 48c6.5 0 11.9-2.1 15.9-5.7l-7.4-5.7c-2 1.4-4.6 2.4-8.5 2.4-6.5 0-12-4.3-14-10.2l-7.5 5.8C6.2 43.2 14.7 48 24 48z"
+    />
+    <path
+      fill="#FBBC05"
+      d="M10 28.4c-.5-1.4-.8-2.8-.8-4.4s.3-3 .8-4.4l-7.5-5.8C.9 16.4 0 20.2 0 24c0 3.8.9 7.6 2.5 10.8l7.5-5.8z"
+    />
+  </svg>
+);
 
 export default function SignIn() {
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -119,7 +145,7 @@ export default function SignIn() {
           ) : null}
 
           <Button className="w-full" onClick={handleGoogle} disabled={googleLoading}>
-            <Chrome className="mr-2 h-4 w-4" />
+            <GoogleIcon className="mr-2 h-4 w-4" />
             {googleLoading ? "Redirecting..." : "Continue with Google"}
           </Button>
           <div className="flex items-center gap-3 text-xs text-ink-500">
