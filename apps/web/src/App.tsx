@@ -12,9 +12,11 @@ import Settings from "./pages/Settings";
 import MatchRoom from "./pages/MatchRoom";
 import UidVerify from "./pages/UidVerify";
 import Roster from "./pages/Roster";
+import PlayerRoster from "./pages/PlayerRoster";
 import Disputes from "./pages/Disputes";
 import Admin from "./pages/Admin";
 import { RequireAuth } from "./auth/RequireAuth";
+import { featureFlags } from "./flags";
 
 export default function App() {
   return (
@@ -40,6 +42,9 @@ export default function App() {
         <Route path="/match/:id" element={<MatchRoom />} />
         <Route path="/uid-verify" element={<UidVerify />} />
         <Route path="/roster" element={<Roster />} />
+        {featureFlags.enableAgentCatalog ? (
+          <Route path="/players/:uid/roster" element={<PlayerRoster />} />
+        ) : null}
         <Route path="/disputes" element={<Disputes />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<div className="card">Page not found.</div>} />
