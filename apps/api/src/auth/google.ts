@@ -99,7 +99,9 @@ export async function exchangeCodeForTokens(params: {
 
   const payload = (await response.json()) as GoogleTokenResponse;
   if (!response.ok) {
-    const message = payload.error_description ?? payload.error ?? "Failed to exchange code";
+    const errorDescription = payload.error_description?.trim();
+    const errorCode = payload.error?.trim();
+    const message = errorDescription || errorCode || "Failed to exchange code";
     throw new Error(message);
   }
   return payload;
