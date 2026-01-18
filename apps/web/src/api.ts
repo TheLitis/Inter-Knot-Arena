@@ -291,6 +291,19 @@ export async function logout(): Promise<void> {
   await postJsonWithCredentials("/auth/logout");
 }
 
+export async function loginWithEmail(payload: { email: string; password: string }): Promise<User> {
+  return postJsonWithCredentials<User>("/auth/login", payload);
+}
+
+export async function registerWithEmail(payload: {
+  email: string;
+  password: string;
+  displayName?: string;
+  region?: string;
+}): Promise<User> {
+  return postJsonWithCredentials<User>("/auth/register", payload);
+}
+
 export async function updateMe(payload: {
   displayName?: string;
   region?: string;
