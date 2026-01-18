@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Check, CheckCircle2, Info, LogOut, Pencil, ShieldAlert, ShieldCheck } from "lucide-react";
 import { updateMe } from "../api";
 import { useAuth } from "../auth/AuthProvider";
+import type { Region } from "@ika/shared";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -11,7 +12,7 @@ import { Input } from "../components/ui/input";
 import { Progress } from "../components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
-const REGIONS = ["NA", "EU", "ASIA", "SEA", "OTHER"] as const;
+const REGIONS: Region[] = ["NA", "EU", "ASIA", "SEA", "OTHER"];
 
 interface ToastState {
   type: "success" | "error";
@@ -23,7 +24,7 @@ type SaveState = "idle" | "saving" | "saved";
 export default function Settings() {
   const { user, isLoading, setUser, logout } = useAuth();
   const [displayName, setDisplayName] = useState("");
-  const [region, setRegion] = useState("OTHER");
+  const [region, setRegion] = useState<Region>("OTHER");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [showUidPublicly, setShowUidPublicly] = useState(false);
   const [showMatchHistoryPublicly, setShowMatchHistoryPublicly] = useState(true);
@@ -396,7 +397,7 @@ export default function Settings() {
                 <select
                   className="h-10 w-full rounded-md border border-border bg-ika-800/70 px-3 text-sm text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
                   value={region}
-                  onChange={(event) => setRegion(event.target.value)}
+                  onChange={(event) => setRegion(event.target.value as Region)}
                 >
                   {REGIONS.map((value) => (
                     <option key={value} value={value}>
@@ -527,7 +528,7 @@ function ToggleRow({
   onChange: (value: boolean) => void;
 }) {
   return (
-    <div className="grid grid-cols-[44px,1fr] items-center gap-3 rounded-lg bg-ika-800/40 px-3 py-2.5">
+    <div className="flex items-start gap-3 rounded-lg bg-ika-800/40 p-3">
       <button
         type="button"
         role="switch"
@@ -543,7 +544,7 @@ function ToggleRow({
           }`}
         />
       </button>
-      <div className="space-y-1">
+      <div>
         <div className="text-sm font-semibold text-ink-900">{label}</div>
         <div className="text-xs text-ink-500">{description}</div>
       </div>
