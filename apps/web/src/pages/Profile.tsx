@@ -231,7 +231,14 @@ export default function Profile() {
   const trustScore = profileUser?.trustScore ?? 0;
   const hasProfileData = Boolean(profileUser);
 
-  if (authLoading || isLoading) {
+  const matchHistory: MatchItem[] = [];
+  const topAgents: AgentUsage[] = [];
+  const rosterAgents: AgentItem[] = [];
+  const evidenceItems: EvidenceItem[] = [];
+  const pastTournaments: TournamentItem[] = [];
+  const upcomingTournaments: TournamentItem[] = [];
+
+  if (authLoading) {
     return <ProfileSkeleton />;
   }
 
@@ -241,6 +248,10 @@ export default function Profile() {
 
   if (id && user.id !== id) {
     return <div className="card">Profile is private for MVP.</div>;
+  }
+
+  if (isLoading) {
+    return <ProfileSkeleton />;
   }
 
   const recentMatches: RecentMatchItem[] = matchHistory.slice(0, 5).map((match) => ({
@@ -255,9 +266,8 @@ export default function Profile() {
     dispute: match.disputeStatus
   }));
 
-  if (isLoading) {
-    return <ProfileSkeleton />;
-  }
+  const rankedEligible = profileUser?.verification.status === "VERIFIED";
+  const avatarInitials = profileUser ? initialsForName(profileUser.displayName) : "??";
 
   return (
     <TooltipProvider>
