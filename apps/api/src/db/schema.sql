@@ -199,6 +199,23 @@ CREATE TABLE IF NOT EXISTS disputes (
   resolved_at bigint
 );
 
+CREATE TABLE IF NOT EXISTS player_agent_states (
+  uid text NOT NULL,
+  region text NOT NULL,
+  agent_id text NOT NULL,
+  state jsonb NOT NULL,
+  updated_at bigint NOT NULL,
+  PRIMARY KEY (uid, region, agent_id)
+);
+
+CREATE TABLE IF NOT EXISTS roster_imports (
+  uid text NOT NULL,
+  region text NOT NULL,
+  summary jsonb NOT NULL,
+  updated_at bigint NOT NULL,
+  PRIMARY KEY (uid, region)
+);
+
 CREATE INDEX IF NOT EXISTS idx_ratings_league ON ratings (league_id);
 CREATE INDEX IF NOT EXISTS idx_disputes_status ON disputes (status);
 CREATE INDEX IF NOT EXISTS idx_matches_state ON matches (state);
