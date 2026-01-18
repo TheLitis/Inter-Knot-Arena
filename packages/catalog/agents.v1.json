@@ -1,0 +1,77 @@
+{
+  "catalogVersion": "v1.0",
+  "agents": [
+    {
+      "agentId": "agent_ellen",
+      "name": "Ellen",
+      "attribute": "ICE",
+      "faction": "Victoria Housekeeping",
+      "role": "ATTACK",
+      "attackType": "MELEE",
+      "rarity": "S",
+      "tags": ["burst", "ice"],
+      "iconKey": "ellen",
+      "shortDescription": "Ice assassin with fast burst windows."
+    },
+    {
+      "agentId": "agent_lycaon",
+      "name": "Lycaon",
+      "attribute": "ICE",
+      "faction": "Victoria Housekeeping",
+      "role": "STUN",
+      "attackType": "MELEE",
+      "rarity": "S",
+      "tags": ["stun", "ice"],
+      "iconKey": "lycaon",
+      "shortDescription": "Frontline stunner with heavy impacts."
+    },
+    {
+      "agentId": "agent_nicole",
+      "name": "Nicole",
+      "attribute": "ETHER",
+      "faction": "Cunning Hares",
+      "role": "SUPPORT",
+      "attackType": "RANGED",
+      "rarity": "A",
+      "tags": ["support", "ether"],
+      "iconKey": "nicole",
+      "shortDescription": "Crowd control and team utility."
+    },
+    {
+      "agentId": "agent_anby",
+      "name": "Anby",
+      "attribute": "ELECTRIC",
+      "faction": "Cunning Hares",
+      "role": "STUN",
+      "attackType": "MELEE",
+      "rarity": "A",
+      "tags": ["stun", "electric"],
+      "iconKey": "anby",
+      "shortDescription": "Fast stun windows with electric pressure."
+    },
+    {
+      "agentId": "agent_billy",
+      "name": "Billy",
+      "attribute": "PHYSICAL",
+      "faction": "Cunning Hares",
+      "role": "ATTACK",
+      "attackType": "RANGED",
+      "rarity": "A",
+      "tags": ["attack", "physical"],
+      "iconKey": "billy",
+      "shortDescription": "Ranged damage with agile mobility."
+    },
+    {
+      "agentId": "agent_zhu_yuan",
+      "name": "Zhu Yuan",
+      "attribute": "ETHER",
+      "faction": "Public Security",
+      "role": "ATTACK",
+      "attackType": "RANGED",
+      "rarity": "S",
+      "tags": ["attack", "ether"],
+      "iconKey": "zhu_yuan",
+      "shortDescription": "Elite ether striker for sustained DPS."
+    }
+  ]
+}
