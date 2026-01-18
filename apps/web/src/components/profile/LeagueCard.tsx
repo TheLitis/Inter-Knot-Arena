@@ -12,7 +12,7 @@ export interface LeagueCardData {
   losses: number | null;
   winrate: number | null;
   streak: string | null;
-  trend: Array<{ day: number; elo: number }>;
+  trend: Array<{ day: string; elo: number }>;
   tone?: "accent" | "cool" | "neutral";
 }
 
