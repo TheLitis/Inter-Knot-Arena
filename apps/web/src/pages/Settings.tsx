@@ -361,7 +361,11 @@ export default function Settings() {
                 <CheckCircle2 className="h-4 w-4" />
                 Verification
               </div>
-              <div className="mt-2 text-sm font-semibold text-ink-900">{user.verification.status}</div>
+              <div className="mt-2">
+                <Badge className={verificationBadgeClass(user.verification.status)}>
+                  {user.verification.status}
+                </Badge>
+              </div>
               {user.verification.uid ? (
                 <div className="mt-1 text-xs text-ink-500">UID: {user.verification.uid}</div>
               ) : null}
@@ -557,6 +561,19 @@ function trustBadgeClass(tier: string): string {
     return "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
   }
   if (tier === "At risk") {
+    return "border border-rose-500/30 bg-rose-500/10 text-rose-300";
+  }
+  return "border border-slate-400/30 bg-slate-500/10 text-slate-300";
+}
+
+function verificationBadgeClass(status: string): string {
+  if (status === "VERIFIED") {
+    return "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+  }
+  if (status === "PENDING") {
+    return "border border-amber-500/30 bg-amber-500/10 text-amber-200";
+  }
+  if (status === "REJECTED") {
     return "border border-rose-500/30 bg-rose-500/10 text-rose-300";
   }
   return "border border-slate-400/30 bg-slate-500/10 text-slate-300";
