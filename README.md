@@ -71,6 +71,31 @@ $env:API_ORIGIN = "http://localhost:4000"
 
 If your web app is not using the Vite proxy, set `VITE_API_URL` in `apps/web` to your API origin.
 
+## Agent catalog + Enka import (feature-flagged)
+
+Enable these flags to turn on catalog and Enka roster import. When disabled, the app behaves as before.
+
+API environment variables:
+
+- `ENABLE_AGENT_CATALOG=true`
+- `ENABLE_ENKA_IMPORT=true`
+- `ENKA_BASE_URL` (default: `https://enka.network/api/zzz/uid`)
+- `CACHE_TTL_MS` (default 600000)
+- `ENKA_RATE_LIMIT_MS` (default 30000)
+- `ENKA_TIMEOUT_MS` (default 8000)
+
+Web environment variables:
+
+- `VITE_ENABLE_AGENT_CATALOG=true`
+- `VITE_ENABLE_ENKA_IMPORT=true`
+
+Endpoints (feature-flagged):
+
+- `GET /catalog/agents`
+- `GET /players/:uid/roster?region=NA&rulesetId=ruleset_standard_v1`
+- `POST /players/:uid/import/enka` with `{ region, force? }`
+- `POST /admin/catalog/reload` (dev-only, admin role or AUTH_DISABLED)
+
 ## Postgres
 
 The API uses the in-memory repository by default. To use Postgres, set `DATABASE_URL` and run migrations + seed data.
@@ -128,8 +153,16 @@ Use `POST /uploads/presign` to get a pre-signed PUT URL.
 - `npm run typecheck`: typecheck all workspaces
 - `npm --workspace apps/api run db:migrate`: run Postgres schema
 - `npm --workspace apps/api run db:seed`: seed Postgres with base data
+- `npm --workspace apps/api run test`: run API unit tests (Enka normalization + merge helpers)
 
 ## Notes
 
 - API data is stored in memory and resets on restart unless Postgres is configured.
 - The Verifier app is not implemented yet; the API exposes placeholders for verifier sessions and evidence uploads.
+
+## Migration plan (Postgres + Redis)
+
+1. Keep `PlayerAgentStateStore` interface and replace `createRosterStore()` with a Prisma-backed implementation.
+2. Create Prisma models for `player_agent_states` and `roster_imports`, map JSON fields to Prisma JSON types.
+3. Replace `CacheClient` with a Redis-backed adapter while keeping the same `get/set` contract.
+4. Leave API contracts unchanged (`/catalog/agents`, `/players/:uid/roster`, `/players/:uid/import/enka`).
