@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Calendar,
   CheckCircle2,
@@ -31,6 +31,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { fetchLeagues, fetchProfile } from "../api";
 import { useAuth } from "../auth/AuthProvider";
+import { featureFlags } from "../flags";
 import { defaultEloConfig, resolveK, type League, type LeagueType, type ProfileSummary } from "@ika/shared";
 
 const leagueOrder: LeagueType[] = ["STANDARD", "F2P", "UNLIMITED"];
@@ -296,6 +297,7 @@ export default function Profile() {
   const regionLabel = profileUser?.region ?? "NA";
   const verificationStatus = profileUser?.verification.status ?? "UNVERIFIED";
   const uidLabel = profileUser?.verification.uid ? "UID verified" : "UID pending";
+  const rosterUid = profileUser?.verification.uid;
 
   return (
     <TooltipProvider>
@@ -533,6 +535,20 @@ export default function Profile() {
           </TabsContent>
 
           <TabsContent value="agents">
+            {featureFlags.enableAgentCatalog ? (
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm text-ink-500">
+                  Showcase roster combines catalog data with imported agent states.
+                </div>
+                {rosterUid ? (
+                  <Link className="text-sm text-accent-400" to={`/players/${rosterUid}/roster`}>
+                    View roster
+                  </Link>
+                ) : (
+                  <span className="text-xs text-ink-500">UID required for roster view.</span>
+                )}
+              </div>
+            ) : null}
             <AgentGrid agents={rosterAgents} />
           </TabsContent>
 
