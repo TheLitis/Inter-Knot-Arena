@@ -7,6 +7,12 @@ import { createStorage } from "./storage/index.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerUserRoutes } from "./routes/users.js";
 import { createAuthContext } from "./auth/context.js";
+import { getFeatureFlags } from "./featureFlags.js";
+import { createCatalogStore } from "./catalog/store.js";
+import { createCache } from "./cache/index.js";
+import { createRosterStore } from "./roster/index.js";
+import { registerCatalogRoutes } from "./routes/catalog.js";
+import { registerRosterRoutes } from "./routes/roster.js";
 
 const app = Fastify({ logger: true });
 
@@ -19,9 +25,22 @@ await app.register(cookie);
 const repo = await createRepository();
 const storage = createStorage();
 const auth = createAuthContext();
+const flags = getFeatureFlags();
 await registerAuthRoutes(app, repo, auth);
 await registerUserRoutes(app, repo, auth);
 await registerRoutes(app, repo, storage);
+
+if (flags.enableAgentCatalog || flags.enableEnkaImport) {
+  const catalogStore = await createCatalogStore();
+  if (flags.enableAgentCatalog) {
+    await registerCatalogRoutes(app, catalogStore, repo, auth);
+  }
+  if (flags.enableEnkaImport) {
+    const { client, config } = createCache();
+    const rosterStore = await createRosterStore();
+    await registerRosterRoutes(app, repo, catalogStore, rosterStore, client, config.ttlMs);
+  }
+}
 
 const port = Number(process.env.PORT ?? 4000);
 const host = process.env.HOST ?? "0.0.0.0";
