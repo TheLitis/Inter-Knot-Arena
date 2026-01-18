@@ -82,6 +82,85 @@ export interface Agent {
   iconUrl?: string;
 }
 
+export type AgentAttribute = "ICE" | "FIRE" | "ELECTRIC" | "ETHER" | "PHYSICAL";
+export type AgentRole = "ATTACK" | "STUN" | "SUPPORT" | "DEFENSE" | "ANOMALY";
+export type AgentAttackType = "MELEE" | "RANGED" | "BURST" | "SUSTAIN";
+export type AgentRarity = "A" | "S";
+
+export interface AgentStatic {
+  agentId: string;
+  name: string;
+  attribute: AgentAttribute;
+  faction: string;
+  role: AgentRole;
+  attackType: AgentAttackType;
+  rarity: AgentRarity;
+  tags: string[];
+  iconKey: string;
+  shortDescription?: string;
+  catalogVersion: string;
+}
+
+export interface AgentCatalog {
+  catalogVersion: string;
+  agents: AgentStatic[];
+}
+
+export type PlayerAgentSource = "ENKA_SHOWCASE" | "VERIFIER_OCR" | "MANUAL";
+
+export interface PlayerAgentDynamic {
+  agentId: string;
+  owned: boolean;
+  level?: number;
+  dupes?: number;
+  weapon?: { weaponId: string; level?: number; rarity?: string };
+  discs?: Array<{
+    discId: string;
+    slot?: number;
+    set?: string;
+    mainStat?: string;
+    subStats?: string[];
+  }>;
+  skills?: Record<string, number>;
+  mindscape?: number;
+  source: PlayerAgentSource;
+  confidence?: Record<string, number>;
+  updatedAt: string;
+}
+
+export interface AgentEligibility {
+  draftEligible: boolean;
+  reasons: string[];
+}
+
+export interface PlayerRosterImportSummary {
+  source: PlayerAgentSource;
+  importedCount: number;
+  skippedCount: number;
+  unknownIds: string[];
+  fetchedAt: string;
+  message?: string;
+}
+
+export interface PlayerRosterView {
+  uid: string;
+  region: Region;
+  catalogVersion: string;
+  agents: Array<{
+    agent: AgentStatic;
+    state?: PlayerAgentDynamic;
+    eligibility: AgentEligibility;
+  }>;
+  lastImport?: PlayerRosterImportSummary;
+}
+
+export interface EnkaMapping {
+  mappingVersion: string;
+  characters: Record<string, string>;
+  weapons: Record<string, string>;
+  discs: Record<string, string>;
+}
+
 export type RosterEvidenceLevel = "DECLARED" | "SCREEN_PROVED" | "VIDEO_PROVED";
 
 export interface RosterAgent {
