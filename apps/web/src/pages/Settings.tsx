@@ -527,13 +527,13 @@ function ToggleRow({
   onChange: (value: boolean) => void;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg bg-ika-800/40 p-3">
+    <div className="grid grid-cols-[44px,1fr] items-center gap-3 rounded-lg bg-ika-800/40 px-3 py-2.5">
       <button
         type="button"
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`mt-0.5 relative h-6 w-11 shrink-0 rounded-full border border-border transition ${
+        className={`relative h-6 w-11 shrink-0 rounded-full border border-border transition ${
           checked ? "bg-accent-500/70" : "bg-ika-800/80"
         }`}
       >
@@ -543,7 +543,7 @@ function ToggleRow({
           }`}
         />
       </button>
-      <div>
+      <div className="space-y-1">
         <div className="text-sm font-semibold text-ink-900">{label}</div>
         <div className="text-xs text-ink-500">{description}</div>
       </div>
