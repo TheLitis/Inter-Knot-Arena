@@ -61,6 +61,7 @@ export function buildGoogleAuthUrl(params: {
   state: string;
   codeChallenge: string;
   nonce: string;
+  prompt?: string;
 }): string {
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   url.searchParams.set("client_id", params.clientId);
@@ -72,6 +73,9 @@ export function buildGoogleAuthUrl(params: {
   url.searchParams.set("state", params.state);
   url.searchParams.set("nonce", params.nonce);
   url.searchParams.set("access_type", "online");
+  if (params.prompt) {
+    url.searchParams.set("prompt", params.prompt);
+  }
   return url.toString();
 }
 
