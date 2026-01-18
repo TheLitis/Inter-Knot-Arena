@@ -409,7 +409,7 @@ export default function Settings() {
               </div>
             </div>
 
-            <div className="grid gap-3 rounded-lg border border-border bg-ika-700/40 p-4">
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-ika-700/40 p-4">
               <div className="text-xs uppercase tracking-[0.2em] text-ink-500">Privacy</div>
               <ToggleRow
                 label="Show UID publicly"
@@ -528,7 +528,7 @@ function ToggleRow({
   onChange: (value: boolean) => void;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg bg-ika-800/40 p-3">
+    <div className="flex w-full items-start gap-3 rounded-lg bg-ika-800/40 p-3">
       <button
         type="button"
         role="switch"
@@ -545,8 +545,8 @@ function ToggleRow({
         />
       </button>
       <div>
-        <div className="text-sm font-semibold text-ink-900">{label}</div>
-        <div className="text-xs text-ink-500">{description}</div>
+        <div className="text-sm font-semibold text-ink-900 leading-5">{label}</div>
+        <div className="text-xs text-ink-500 leading-4">{description}</div>
       </div>
     </div>
   );
