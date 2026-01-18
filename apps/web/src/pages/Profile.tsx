@@ -457,7 +457,8 @@ export default function Profile() {
 
         <Tabs value={tab} onValueChange={setTab} className="mt-8">
           <div className="sticky top-24 z-20 bg-ika-900/90 pb-3 pt-3">
-            <TabsList className="w-full">
+            <div className="rounded-lg border border-border bg-ika-800/70 p-1">
+              <TabsList className="w-full border-0 bg-transparent p-0">
               <TabsTrigger value="overview" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500">
                 Overview
               </TabsTrigger>
@@ -477,6 +478,7 @@ export default function Profile() {
                 Evidence
               </TabsTrigger>
             </TabsList>
+            </div>
           </div>
 
           <TabsContent value="overview">
