@@ -1,5 +1,6 @@
 import type { AgentEligibility, AgentStatic, PlayerAgentDynamic } from "@ika/shared";
 import { Badge } from "../ui/badge";
+import { RarityIcon } from "../RarityIcon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface PlayerAgentCardProps {
@@ -25,7 +26,7 @@ export function PlayerAgentCard({ agent, state, eligibility }: PlayerAgentCardPr
           <div className="text-sm font-semibold text-ink-900">{agent.name}</div>
           <div className="text-xs text-ink-500">{agent.faction}</div>
         </div>
-        <Badge className="border border-border bg-ika-700/60 text-ink-700">{agent.rarity}</Badge>
+        <RarityIcon rarity={agent.rarity} className="h-6 w-6 object-contain" />
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2 text-xs">
