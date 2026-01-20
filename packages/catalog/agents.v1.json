@@ -1,41 +1,588 @@
 {
   "catalogVersion": "v1.0",
+  "asOf": "2026-01-20",
+  "source": {
+    "provider": "hakush.in",
+    "characterIndex": "https://api.hakush.in/zzz/data/character.json"
+  },
   "agents": [
+    {
+      "agentId": "agent_alice",
+      "name": "Alice",
+      "attribute": "PHYSICAL",
+      "faction": "Spook Shack",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "anomaly",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "alice",
+      "shortDescription": "Physical Anomaly agent from Spook Shack.",
+      "hakushId": 1401
+    },
+    {
+      "agentId": "agent_astra",
+      "name": "Astra Yao",
+      "attribute": "ETHER",
+      "faction": "Stars of Lyra",
+      "role": "SUPPORT",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "ether",
+        "strike",
+        "support"
+      ],
+      "iconKey": "astra",
+      "shortDescription": "Ether Support agent from Stars of Lyra.",
+      "hakushId": 1311
+    },
+    {
+      "agentId": "agent_banyue",
+      "name": "Banyue",
+      "attribute": "FIRE",
+      "faction": "Krampus Compliance Authority",
+      "role": "RUPTURE",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "fire",
+        "rupture",
+        "strike"
+      ],
+      "iconKey": "banyue",
+      "shortDescription": "Fire Rupture agent from Krampus Compliance Authority.",
+      "hakushId": 1471
+    },
+    {
+      "agentId": "agent_burnice",
+      "name": "Burnice",
+      "attribute": "FIRE",
+      "faction": "Sons of Calydon",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "PIERCE",
+      "tags": [
+        "anomaly",
+        "fire",
+        "pierce"
+      ],
+      "iconKey": "burnice",
+      "shortDescription": "Fire Anomaly agent from Sons of Calydon.",
+      "hakushId": 1171
+    },
+    {
+      "agentId": "agent_caesar",
+      "name": "Caesar",
+      "attribute": "PHYSICAL",
+      "faction": "Sons of Calydon",
+      "role": "DEFENSE",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "defense",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "caesar",
+      "shortDescription": "Physical Defense agent from Sons of Calydon.",
+      "hakushId": 1071
+    },
+    {
+      "agentId": "agent_dialyn",
+      "name": "Dialyn",
+      "attribute": "PHYSICAL",
+      "faction": "Krampus Compliance Authority",
+      "role": "STUN",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "physical",
+        "slash",
+        "stun"
+      ],
+      "iconKey": "dialyn",
+      "shortDescription": "Physical Stun agent from Krampus Compliance Authority.",
+      "hakushId": 1481
+    },
     {
       "agentId": "agent_ellen",
       "name": "Ellen",
       "attribute": "ICE",
-      "faction": "Victoria Housekeeping",
+      "faction": "Victoria Housekeeping Co.",
       "role": "ATTACK",
-      "attackType": "MELEE",
       "rarity": "S",
-      "tags": ["burst", "ice"],
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "ice",
+        "slash"
+      ],
       "iconKey": "ellen",
-      "shortDescription": "Ice assassin with fast burst windows."
+      "shortDescription": "Ice Attack agent from Victoria Housekeeping Co..",
+      "hakushId": 1191
+    },
+    {
+      "agentId": "agent_evelyn",
+      "name": "Evelyn",
+      "attribute": "FIRE",
+      "faction": "Stars of Lyra",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "fire",
+        "slash"
+      ],
+      "iconKey": "evelyn",
+      "shortDescription": "Fire Attack agent from Stars of Lyra.",
+      "hakushId": 1321
+    },
+    {
+      "agentId": "agent_grace",
+      "name": "Grace",
+      "attribute": "ELECTRIC",
+      "faction": "Belobog Heavy Industries",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "PIERCE",
+      "tags": [
+        "anomaly",
+        "electric",
+        "pierce"
+      ],
+      "iconKey": "grace",
+      "shortDescription": "Electric Anomaly agent from Belobog Heavy Industries.",
+      "hakushId": 1181
+    },
+    {
+      "agentId": "agent_harumasa",
+      "name": "Harumasa",
+      "attribute": "ELECTRIC",
+      "faction": "Hollow Special Operations Section 6",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "PIERCE",
+      "tags": [
+        "attack",
+        "electric",
+        "pierce"
+      ],
+      "iconKey": "harumasa",
+      "shortDescription": "Electric Attack agent from Hollow Special Operations Section 6.",
+      "hakushId": 1201
+    },
+    {
+      "agentId": "agent_hugo",
+      "name": "Hugo",
+      "attribute": "ICE",
+      "faction": "Mockingbird",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "ice",
+        "slash"
+      ],
+      "iconKey": "hugo",
+      "shortDescription": "Ice Attack agent from Mockingbird.",
+      "hakushId": 1291
+    },
+    {
+      "agentId": "agent_jane",
+      "name": "Jane",
+      "attribute": "PHYSICAL",
+      "faction": "Criminal Investigation Special Response Team",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "anomaly",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "jane",
+      "shortDescription": "Physical Anomaly agent from Criminal Investigation Special Response Team.",
+      "hakushId": 1261
+    },
+    {
+      "agentId": "agent_ju_fufu",
+      "name": "Ju Fufu",
+      "attribute": "FIRE",
+      "faction": "Yunkui Summit",
+      "role": "STUN",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "fire",
+        "strike",
+        "stun"
+      ],
+      "iconKey": "ju_fufu",
+      "shortDescription": "Fire Stun agent from Yunkui Summit.",
+      "hakushId": 1391
+    },
+    {
+      "agentId": "agent_koleda",
+      "name": "Koleda",
+      "attribute": "FIRE",
+      "faction": "Belobog Heavy Industries",
+      "role": "STUN",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "fire",
+        "strike",
+        "stun"
+      ],
+      "iconKey": "koleda",
+      "shortDescription": "Fire Stun agent from Belobog Heavy Industries.",
+      "hakushId": 1101
+    },
+    {
+      "agentId": "agent_lighter",
+      "name": "Lighter",
+      "attribute": "FIRE",
+      "faction": "Sons of Calydon",
+      "role": "STUN",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "fire",
+        "strike",
+        "stun"
+      ],
+      "iconKey": "lighter",
+      "shortDescription": "Fire Stun agent from Sons of Calydon.",
+      "hakushId": 1161
+    },
+    {
+      "agentId": "agent_lucia",
+      "name": "Lucia",
+      "attribute": "ETHER",
+      "faction": "Spook Shack",
+      "role": "SUPPORT",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "ether",
+        "strike",
+        "support"
+      ],
+      "iconKey": "lucia",
+      "shortDescription": "Ether Support agent from Spook Shack.",
+      "hakushId": 1451
     },
     {
       "agentId": "agent_lycaon",
       "name": "Lycaon",
       "attribute": "ICE",
-      "faction": "Victoria Housekeeping",
+      "faction": "Victoria Housekeeping Co.",
       "role": "STUN",
-      "attackType": "MELEE",
       "rarity": "S",
-      "tags": ["stun", "ice"],
+      "attackType": "STRIKE",
+      "tags": [
+        "ice",
+        "strike",
+        "stun"
+      ],
       "iconKey": "lycaon",
-      "shortDescription": "Frontline stunner with heavy impacts."
+      "shortDescription": "Ice Stun agent from Victoria Housekeeping Co..",
+      "hakushId": 1141
     },
     {
-      "agentId": "agent_nicole",
-      "name": "Nicole",
-      "attribute": "ETHER",
+      "agentId": "agent_miyabi",
+      "name": "Miyabi",
+      "attribute": "ICE",
+      "faction": "Hollow Special Operations Section 6",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "anomaly",
+        "ice",
+        "slash"
+      ],
+      "iconKey": "miyabi",
+      "shortDescription": "Ice Anomaly agent from Hollow Special Operations Section 6.",
+      "hakushId": 1091
+    },
+    {
+      "agentId": "agent_nekomata",
+      "name": "Nekomata",
+      "attribute": "PHYSICAL",
       "faction": "Cunning Hares",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "nekomata",
+      "shortDescription": "Physical Attack agent from Cunning Hares.",
+      "hakushId": 1021
+    },
+    {
+      "agentId": "agent_orphie_magus",
+      "name": "Orphie & Magus",
+      "attribute": "FIRE",
+      "faction": "New Eridu Defense Force",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "PIERCE",
+      "tags": [
+        "attack",
+        "fire",
+        "pierce"
+      ],
+      "iconKey": "orphie_magus",
+      "shortDescription": "Fire Attack agent from New Eridu Defense Force.",
+      "hakushId": 1301
+    },
+    {
+      "agentId": "agent_qingyi",
+      "name": "Qingyi",
+      "attribute": "ELECTRIC",
+      "faction": "Criminal Investigation Special Response Team",
+      "role": "STUN",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "electric",
+        "strike",
+        "stun"
+      ],
+      "iconKey": "qingyi",
+      "shortDescription": "Electric Stun agent from Criminal Investigation Special Response Team.",
+      "hakushId": 1251
+    },
+    {
+      "agentId": "agent_rina",
+      "name": "Rina",
+      "attribute": "ELECTRIC",
+      "faction": "Victoria Housekeeping Co.",
       "role": "SUPPORT",
-      "attackType": "RANGED",
-      "rarity": "A",
-      "tags": ["support", "ether"],
-      "iconKey": "nicole",
-      "shortDescription": "Crowd control and team utility."
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "electric",
+        "strike",
+        "support"
+      ],
+      "iconKey": "rina",
+      "shortDescription": "Electric Support agent from Victoria Housekeeping Co..",
+      "hakushId": 1211
+    },
+    {
+      "agentId": "agent_seed",
+      "name": "Seed",
+      "attribute": "ELECTRIC",
+      "faction": "New Eridu Defense Force",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "electric",
+        "slash"
+      ],
+      "iconKey": "seed",
+      "shortDescription": "Electric Attack agent from New Eridu Defense Force.",
+      "hakushId": 1461
+    },
+    {
+      "agentId": "agent_soldier_0_anby",
+      "name": "Soldier 0 - Anby",
+      "attribute": "ELECTRIC",
+      "faction": "New Eridu Defense Force",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "electric",
+        "slash"
+      ],
+      "iconKey": "soldier_0_anby",
+      "shortDescription": "Electric Attack agent from New Eridu Defense Force.",
+      "hakushId": 1381
+    },
+    {
+      "agentId": "agent_soldier_11",
+      "name": "Soldier 11",
+      "attribute": "FIRE",
+      "faction": "New Eridu Defense Force",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "fire",
+        "slash"
+      ],
+      "iconKey": "soldier_11",
+      "shortDescription": "Fire Attack agent from New Eridu Defense Force.",
+      "hakushId": 1041
+    },
+    {
+      "agentId": "agent_trigger",
+      "name": "Trigger",
+      "attribute": "ELECTRIC",
+      "faction": "New Eridu Defense Force",
+      "role": "STUN",
+      "rarity": "S",
+      "attackType": "PIERCE",
+      "tags": [
+        "electric",
+        "pierce",
+        "stun"
+      ],
+      "iconKey": "trigger",
+      "shortDescription": "Electric Stun agent from New Eridu Defense Force.",
+      "hakushId": 1361
+    },
+    {
+      "agentId": "agent_vivian",
+      "name": "Vivian",
+      "attribute": "ETHER",
+      "faction": "Mockingbird",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "anomaly",
+        "ether",
+        "slash"
+      ],
+      "iconKey": "vivian",
+      "shortDescription": "Ether Anomaly agent from Mockingbird.",
+      "hakushId": 1331
+    },
+    {
+      "agentId": "agent_yanagi",
+      "name": "Yanagi",
+      "attribute": "ELECTRIC",
+      "faction": "Hollow Special Operations Section 6",
+      "role": "ANOMALY",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "anomaly",
+        "electric",
+        "slash"
+      ],
+      "iconKey": "yanagi",
+      "shortDescription": "Electric Anomaly agent from Hollow Special Operations Section 6.",
+      "hakushId": 1221
+    },
+    {
+      "agentId": "agent_ye_shunguang",
+      "name": "Ye Shunguang",
+      "attribute": "PHYSICAL",
+      "faction": "Yunkui Summit",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "ye_shunguang",
+      "shortDescription": "Physical Attack agent from Yunkui Summit.",
+      "hakushId": 1431
+    },
+    {
+      "agentId": "agent_yidhari",
+      "name": "Yidhari",
+      "attribute": "ICE",
+      "faction": "Spook Shack",
+      "role": "RUPTURE",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "ice",
+        "rupture",
+        "strike"
+      ],
+      "iconKey": "yidhari",
+      "shortDescription": "Ice Rupture agent from Spook Shack.",
+      "hakushId": 1051
+    },
+    {
+      "agentId": "agent_yixuan",
+      "name": "Yixuan",
+      "attribute": "ETHER",
+      "faction": "Yunkui Summit",
+      "role": "RUPTURE",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "ether",
+        "rupture",
+        "strike"
+      ],
+      "iconKey": "yixuan",
+      "shortDescription": "Ether Rupture agent from Yunkui Summit.",
+      "hakushId": 1371
+    },
+    {
+      "agentId": "agent_yuzuha",
+      "name": "Yuzuha",
+      "attribute": "PHYSICAL",
+      "faction": "Spook Shack",
+      "role": "SUPPORT",
+      "rarity": "S",
+      "attackType": "STRIKE",
+      "tags": [
+        "physical",
+        "strike",
+        "support"
+      ],
+      "iconKey": "yuzuha",
+      "shortDescription": "Physical Support agent from Spook Shack.",
+      "hakushId": 1411
+    },
+    {
+      "agentId": "agent_zhao",
+      "name": "Zhao",
+      "attribute": "ICE",
+      "faction": "Krampus Compliance Authority",
+      "role": "DEFENSE",
+      "rarity": "S",
+      "attackType": "SLASH",
+      "tags": [
+        "defense",
+        "ice",
+        "slash"
+      ],
+      "iconKey": "zhao",
+      "shortDescription": "Ice Defense agent from Krampus Compliance Authority.",
+      "hakushId": 1341
+    },
+    {
+      "agentId": "agent_zhu_yuan",
+      "name": "Zhu Yuan",
+      "attribute": "ETHER",
+      "faction": "Criminal Investigation Special Response Team",
+      "role": "ATTACK",
+      "rarity": "S",
+      "attackType": "PIERCE",
+      "tags": [
+        "attack",
+        "ether",
+        "pierce"
+      ],
+      "iconKey": "zhu_yuan",
+      "shortDescription": "Ether Attack agent from Criminal Investigation Special Response Team.",
+      "hakushId": 1241
     },
     {
       "agentId": "agent_anby",
@@ -43,11 +590,50 @@
       "attribute": "ELECTRIC",
       "faction": "Cunning Hares",
       "role": "STUN",
-      "attackType": "MELEE",
       "rarity": "A",
-      "tags": ["stun", "electric"],
+      "attackType": "SLASH",
+      "tags": [
+        "electric",
+        "slash",
+        "stun"
+      ],
       "iconKey": "anby",
-      "shortDescription": "Fast stun windows with electric pressure."
+      "shortDescription": "Electric Stun agent from Cunning Hares.",
+      "hakushId": 1011
+    },
+    {
+      "agentId": "agent_anton",
+      "name": "Anton",
+      "attribute": "ELECTRIC",
+      "faction": "Belobog Heavy Industries",
+      "role": "ATTACK",
+      "rarity": "A",
+      "attackType": "PIERCE",
+      "tags": [
+        "attack",
+        "electric",
+        "pierce"
+      ],
+      "iconKey": "anton",
+      "shortDescription": "Electric Attack agent from Belobog Heavy Industries.",
+      "hakushId": 1111
+    },
+    {
+      "agentId": "agent_ben",
+      "name": "Ben",
+      "attribute": "FIRE",
+      "faction": "Belobog Heavy Industries",
+      "role": "DEFENSE",
+      "rarity": "A",
+      "attackType": "STRIKE",
+      "tags": [
+        "defense",
+        "fire",
+        "strike"
+      ],
+      "iconKey": "ben",
+      "shortDescription": "Fire Defense agent from Belobog Heavy Industries.",
+      "hakushId": 1121
     },
     {
       "agentId": "agent_billy",
@@ -55,23 +641,169 @@
       "attribute": "PHYSICAL",
       "faction": "Cunning Hares",
       "role": "ATTACK",
-      "attackType": "RANGED",
       "rarity": "A",
-      "tags": ["attack", "physical"],
+      "attackType": "PIERCE",
+      "tags": [
+        "attack",
+        "physical",
+        "pierce"
+      ],
       "iconKey": "billy",
-      "shortDescription": "Ranged damage with agile mobility."
+      "shortDescription": "Physical Attack agent from Cunning Hares.",
+      "hakushId": 1081
     },
     {
-      "agentId": "agent_zhu_yuan",
-      "name": "Zhu Yuan",
-      "attribute": "ETHER",
-      "faction": "Public Security",
+      "agentId": "agent_corin",
+      "name": "Corin",
+      "attribute": "PHYSICAL",
+      "faction": "Victoria Housekeeping Co.",
       "role": "ATTACK",
-      "attackType": "RANGED",
-      "rarity": "S",
-      "tags": ["attack", "ether"],
-      "iconKey": "zhu_yuan",
-      "shortDescription": "Elite ether striker for sustained DPS."
+      "rarity": "A",
+      "attackType": "SLASH",
+      "tags": [
+        "attack",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "corin",
+      "shortDescription": "Physical Attack agent from Victoria Housekeeping Co..",
+      "hakushId": 1061
+    },
+    {
+      "agentId": "agent_lucy",
+      "name": "Lucy",
+      "attribute": "FIRE",
+      "faction": "Sons of Calydon",
+      "role": "SUPPORT",
+      "rarity": "A",
+      "attackType": "STRIKE",
+      "tags": [
+        "fire",
+        "strike",
+        "support"
+      ],
+      "iconKey": "lucy",
+      "shortDescription": "Fire Support agent from Sons of Calydon.",
+      "hakushId": 1151
+    },
+    {
+      "agentId": "agent_manato",
+      "name": "Manato",
+      "attribute": "FIRE",
+      "faction": "Spook Shack",
+      "role": "RUPTURE",
+      "rarity": "A",
+      "attackType": "SLASH",
+      "tags": [
+        "fire",
+        "rupture",
+        "slash"
+      ],
+      "iconKey": "manato",
+      "shortDescription": "Fire Rupture agent from Spook Shack.",
+      "hakushId": 1441
+    },
+    {
+      "agentId": "agent_nicole",
+      "name": "Nicole",
+      "attribute": "ETHER",
+      "faction": "Cunning Hares",
+      "role": "SUPPORT",
+      "rarity": "A",
+      "attackType": "STRIKE",
+      "tags": [
+        "ether",
+        "strike",
+        "support"
+      ],
+      "iconKey": "nicole",
+      "shortDescription": "Ether Support agent from Cunning Hares.",
+      "hakushId": 1031
+    },
+    {
+      "agentId": "agent_yinhu",
+      "name": "Pan Yinhu",
+      "attribute": "PHYSICAL",
+      "faction": "Yunkui Summit",
+      "role": "DEFENSE",
+      "rarity": "A",
+      "attackType": "STRIKE",
+      "tags": [
+        "defense",
+        "physical",
+        "strike"
+      ],
+      "iconKey": "yinhu",
+      "shortDescription": "Physical Defense agent from Yunkui Summit.",
+      "hakushId": 1421
+    },
+    {
+      "agentId": "agent_piper",
+      "name": "Piper",
+      "attribute": "PHYSICAL",
+      "faction": "Sons of Calydon",
+      "role": "ANOMALY",
+      "rarity": "A",
+      "attackType": "SLASH",
+      "tags": [
+        "anomaly",
+        "physical",
+        "slash"
+      ],
+      "iconKey": "piper",
+      "shortDescription": "Physical Anomaly agent from Sons of Calydon.",
+      "hakushId": 1281
+    },
+    {
+      "agentId": "agent_pulchra",
+      "name": "Pulchra",
+      "attribute": "PHYSICAL",
+      "faction": "Sons of Calydon",
+      "role": "STUN",
+      "rarity": "A",
+      "attackType": "SLASH",
+      "tags": [
+        "physical",
+        "slash",
+        "stun"
+      ],
+      "iconKey": "pulchra",
+      "shortDescription": "Physical Stun agent from Sons of Calydon.",
+      "hakushId": 1351
+    },
+    {
+      "agentId": "agent_seth",
+      "name": "Seth",
+      "attribute": "ELECTRIC",
+      "faction": "Criminal Investigation Special Response Team",
+      "role": "DEFENSE",
+      "rarity": "A",
+      "attackType": "SLASH",
+      "tags": [
+        "defense",
+        "electric",
+        "slash"
+      ],
+      "iconKey": "seth",
+      "shortDescription": "Electric Defense agent from Criminal Investigation Special Response Team.",
+      "hakushId": 1271
+    },
+    {
+      "agentId": "agent_soukaku",
+      "name": "Soukaku",
+      "attribute": "ICE",
+      "faction": "Hollow Special Operations Section 6",
+      "role": "SUPPORT",
+      "rarity": "A",
+      "attackType": "SLASH",
+      "tags": [
+        "ice",
+        "slash",
+        "support"
+      ],
+      "iconKey": "soukaku",
+      "shortDescription": "Ice Support agent from Hollow Special Operations Section 6.",
+      "hakushId": 1131
     }
   ]
 }
