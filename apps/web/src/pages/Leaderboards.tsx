@@ -35,7 +35,6 @@ export default function Leaderboards() {
         rank: index + 1,
         player: user?.displayName ?? rating.userId,
         elo: rating.elo,
-        provisional: rating.provisionalMatches < 10,
         region: user?.region ?? "—"
       };
     });
@@ -71,9 +70,6 @@ export default function Leaderboards() {
               {option.label}
             </button>
           ))}
-        </div>
-        <div className="text-xs text-ink-500">
-          Provisional if fewer than 10 matches.
         </div>
       </div>
 
