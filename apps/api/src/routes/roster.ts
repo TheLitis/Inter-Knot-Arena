@@ -178,7 +178,12 @@ export async function registerRosterRoutes(
         cache.set(cacheKey, { payload, fetchedAt }, cacheTtlMs);
       }
 
-      const { agents, unknownIds } = normalizeEnkaPayload(payload, catalog.getMapping(), fetchedAt);
+      const { agents, unknownIds } = normalizeEnkaPayload(
+        payload,
+        catalog.getMapping(),
+        fetchedAt,
+        catalog.getDiscSetMap()
+      );
       const skippedCount = unknownIds.filter((id) => id.startsWith("character:")).length;
       const summary: PlayerRosterImportSummary = {
         source: "ENKA_SHOWCASE",
