@@ -1,4 +1,4 @@
-import type { EnkaMapping, PlayerAgentDynamic } from "@ika/shared";
+import type { DiscProperty, DiscSet, EnkaMapping, PlayerAgentDynamic } from "@ika/shared";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -26,6 +26,24 @@ function asNumber(value: unknown): number | undefined {
   }
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function asBoolean(value: unknown): boolean | undefined {
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (value === 1 || value === 0) {
+    return Boolean(value);
+  }
+  if (typeof value === "string") {
+    if (value.toLowerCase() === "true") {
+      return true;
+    }
+    if (value.toLowerCase() === "false") {
+      return false;
+    }
+  }
+  return undefined;
 }
 
 function hasExplicitAgentId(record: UnknownRecord): boolean {
@@ -75,6 +93,106 @@ function looksLikeAgentRecord(record: UnknownRecord): boolean {
     return true;
   }
   return hasCharacterMarkers(record) && extractId(record) !== null;
+}
+
+function normalizeDiscProps(value: unknown): DiscProperty[] | undefined {
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+  const normalized = list
+    .map((item) => {
+      const record = asRecord(item);
+      if (!record) {
+        return null;
+      }
+      const propertyId =
+        asNumber(record.PropertyId ?? record.propertyId ?? record.Id ?? record.id ?? record.propertyType);
+      if (propertyId === undefined) {
+        return null;
+      }
+      const level = asNumber(record.Level ?? record.level ?? record.PropertyLevel ?? record.propertyLevel);
+      const rawValue =
+        asNumber(record.Value ?? record.value ?? record.PropertyValue ?? record.propertyValue) ??
+        asString(record.Value ?? record.value ?? record.PropertyValue ?? record.propertyValue);
+      return {
+        propertyId,
+        level,
+        value: rawValue
+      } satisfies DiscProperty;
+    })
+    .filter((item) => item !== null) as DiscProperty[];
+  return normalized.length ? normalized : undefined;
+}
+
+function extractEquippedList(record: UnknownRecord): UnknownRecord[] {
+  const list = asArray(
+    record.EquippedList ??
+      record.equippedList ??
+      record.equipmentList ??
+      record.equipList ??
+      record.equipments ??
+      record.equipment
+  );
+  return list.map((item) => asRecord(item)).filter((item): item is UnknownRecord => Boolean(item));
+}
+
+function extractEquipment(record: UnknownRecord): UnknownRecord | null {
+  return (
+    asRecord(record.Equipment) ??
+    asRecord(record.equipment) ??
+    asRecord(record.driveDisk) ??
+    asRecord(record.disc) ??
+    asRecord(record.item) ??
+    record
+  );
+}
+
+function normalizeEquippedDiscs(
+  record: UnknownRecord,
+  discSetMap?: Map<number, DiscSet>
+): PlayerAgentDynamic["discs"] | undefined {
+  const equipped = extractEquippedList(record);
+  if (!equipped.length) {
+    return undefined;
+  }
+
+  const discs = equipped
+    .map((entry) => {
+      const equipment = extractEquipment(entry);
+      if (!equipment) {
+        return null;
+      }
+      const pieceId = asNumber(equipment.Id ?? equipment.id ?? equipment.pieceId ?? equipment.equipmentId);
+      if (!pieceId) {
+        return null;
+      }
+      const setGameId = Math.floor(pieceId / 100) * 100;
+      const slot = pieceId % 10;
+      const discSet = discSetMap?.get(setGameId);
+      const setName = discSet?.name ?? `Unknown set ${setGameId}`;
+      const setId = discSet?.discSetId ?? `discset_${setGameId}`;
+      const setIconKey = discSet?.iconKey;
+
+      return {
+        discId: `disc_${pieceId}`,
+        pieceGameId: pieceId,
+        setGameId,
+        slot,
+        setId,
+        setName,
+        setIconKey,
+        mainProps: normalizeDiscProps(
+          equipment.MainProperty ?? equipment.mainProperty ?? equipment.mainProps
+        ),
+        subProps: normalizeDiscProps(
+          equipment.SubPropertyList ?? equipment.subPropertyList ?? equipment.subProps
+        ),
+        level: asNumber(equipment.Level ?? equipment.level),
+        breakLevel: asNumber(equipment.BreakLevel ?? equipment.breakLevel),
+        isLocked: asBoolean(equipment.IsLock ?? equipment.isLocked)
+      };
+    })
+    .filter((item) => item !== null);
+
+  return discs.length ? (discs as PlayerAgentDynamic["discs"]) : undefined;
 }
 
 function extractShowcaseAgents(payload: unknown): unknown[] {
@@ -258,7 +376,8 @@ function normalizeSkills(record: UnknownRecord): Record<string, number> | undefi
 export function normalizeEnkaPayload(
   payload: unknown,
   mapping: EnkaMapping,
-  timestampIso: string
+  timestampIso: string,
+  discSetMap?: Map<number, DiscSet>
 ): { agents: PlayerAgentDynamic[]; unknownIds: string[] } {
   const unknownIds: string[] = [];
   const agents = extractShowcaseAgents(payload)
@@ -298,7 +417,7 @@ export function normalizeEnkaPayload(
         dupes: asNumber(record.dupes ?? record.rank),
         mindscape: asNumber(record.mindscape ?? record.resonance),
         weapon: normalizeWeapon(record, mapping, unknownIds),
-        discs: normalizeDiscs(record, mapping, unknownIds),
+        discs: normalizeEquippedDiscs(record, discSetMap) ?? normalizeDiscs(record, mapping, unknownIds),
         skills: normalizeSkills(record),
         source: "ENKA_SHOWCASE",
         updatedAt: timestampIso
