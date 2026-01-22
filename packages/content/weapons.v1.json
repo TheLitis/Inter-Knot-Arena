@@ -1,0 +1,851 @@
+{
+  "catalogVersion": "v1.0",
+  "asOf": "2026-01-22",
+  "source": {
+    "provider": "hakush",
+    "note": "Generated from Hakush weapon.json snapshot",
+    "input": "hakush-weapon.2026-01-22.json"
+  },
+  "weapons": [
+    {
+      "weaponId": "weapon_12001",
+      "gameId": 12001,
+      "name": "W-Engine 12001",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_01",
+      "shortDescription": "A W-Engine that prioritizes damage output over noise reduction. It can indiscriminately deal considerable damage to all units nearby.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12002",
+      "gameId": 12002,
+      "name": "W-Engine 12002",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_02",
+      "shortDescription": "A W-Engine with excellent sonic and thermal energy usage, capable of hitting its target with a double whammy.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12003",
+      "gameId": 12003,
+      "name": "W-Engine 12003",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_03",
+      "shortDescription": "A high-capacity portable W-Engine that can collect dissipated energy from its surroundings, thus enhancing the combat effectiveness of its operator.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12004",
+      "gameId": 12004,
+      "name": "W-Engine 12004",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_04",
+      "shortDescription": "A special W-Engine featuring a built-in sonic generator that boosts its damage output.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12005",
+      "gameId": 12005,
+      "name": "W-Engine 12005",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_05",
+      "shortDescription": "A standardized W-Engine with balanced performance that enhances its owner's and their teammates' combat effectiveness in all aspects.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12006",
+      "gameId": 12006,
+      "name": "W-Engine 12006",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_06",
+      "shortDescription": "A special W-Engine that features motion capture algorithms, which enhance the overall combat competency of your squad.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12007",
+      "gameId": 12007,
+      "name": "W-Engine 12007",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_07",
+      "shortDescription": "An energy-storage type W-Engine with a unique operation circuit. It will absorb scattered energy up to a certain amount before unleashing it all at once.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12008",
+      "gameId": 12008,
+      "name": "W-Engine 12008",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_08",
+      "shortDescription": "A tactical W-Engine that locates enemies using high-frequency sound waves. Its aiming aid can make its operator's precision attack more deadly.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12009",
+      "gameId": 12009,
+      "name": "W-Engine 12009",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_09",
+      "shortDescription": "A frequency-converting W-Engine that can quickly generate excessive power and effectively increase its user's battle prowess.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12010",
+      "gameId": 12010,
+      "name": "W-Engine 12010",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_10",
+      "shortDescription": "A special W-Engine that can analyze the target's weak spots through real-time calculations.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12011",
+      "gameId": 12011,
+      "name": "W-Engine 12011",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_11",
+      "shortDescription": "A damage-type W-Engine that features an enhanced movement detection module that can quickly alter its output intensity to optimize battle efficiency.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12012",
+      "gameId": 12012,
+      "name": "W-Engine 12012",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_12",
+      "shortDescription": "A high-capacity W-Engine that features a built-in generator, which allows it to keep a stable storage of electrical power.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12013",
+      "gameId": 12013,
+      "name": "W-Engine 12013",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_13",
+      "shortDescription": "A W-Engine with a component structure adjusted according to specific parameters. It can enhance the defensive capabilities of those who have a certain style of combat.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12014",
+      "gameId": 12014,
+      "name": "W-Engine 12014",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_14",
+      "shortDescription": "A functional W-Engine that specializes in energy conversion. It can analyze combat environments and generate special sounds to disrupt the enemy's offense.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_12015",
+      "gameId": 12015,
+      "name": "W-Engine 12015",
+      "rarity": "UNKNOWN",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_B_Common_15",
+      "shortDescription": "A W-Engine with a built-in heating component. When operating at high speeds, it resembles a blazing blue flame.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13001",
+      "gameId": 13001,
+      "name": "W-Engine 13001",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_01",
+      "shortDescription": "A custom-made W-Engine designed for urban music lovers. It sacrifices heat dissipation components for improved sound quality.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13002",
+      "gameId": 13002,
+      "name": "W-Engine 13002",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_02",
+      "shortDescription": "A special W-Engine equipped with a high-speed camera module. The best choice for in-Hollow photography enthusiasts.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13003",
+      "gameId": 13003,
+      "name": "W-Engine 13003",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_03",
+      "shortDescription": "A consumer-class W-Engine launched by an exotic pet fan club to promote pet culture. Due to its cute appearance, it was once a very popular model.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13004",
+      "gameId": 13004,
+      "name": "W-Engine 13004",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_04",
+      "shortDescription": "A damage-type W-Engine made of special Etheric matter. When its user is attacked, it builds up energy.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13005",
+      "gameId": 13005,
+      "name": "W-Engine 13005",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_05",
+      "shortDescription": "A high-power W-Engine that boasts a cutting-edge energy conversion system. It collects excess heat and supplies it to the steamer.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13006",
+      "gameId": 13006,
+      "name": "W-Engine 13006",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_06",
+      "shortDescription": "A special W-Engine whose outer shell is made of composite Etheric matter that effectively absorbs impact, and turns it against the enemy.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13007",
+      "gameId": 13007,
+      "name": "W-Engine 13007",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_07",
+      "shortDescription": "An epic W-Engine favored by Starlight Knight fans. Its high popularity and scarcity marketing strategy have caused an influx of knock-offs.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13008",
+      "gameId": 13008,
+      "name": "W-Engine 13008",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_08",
+      "shortDescription": "A W-Engine produced by recycling abandoned Bangboo shells. Its electrode cores made of recycled metals can release high-voltage charges.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13009",
+      "gameId": 13009,
+      "name": "W-Engine 13009",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_09",
+      "shortDescription": "This damage-type W-Engine boasts a built-in current transformer, and automatically attracts electrically sensitive objects around the operator and deals additional damage to them.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13010",
+      "gameId": 13010,
+      "name": "W-Engine 13010",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_10",
+      "shortDescription": "A special W-Engine decorated with a fluffy bunny. However, it is just an imitation of the real animal.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13011",
+      "gameId": 13011,
+      "name": "W-Engine 13011",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_11",
+      "shortDescription": "A special W-Engine equipped with a temperature regulator where residual heat generated by the W-Engine's high frequency is funneled into the hot springs on its surface.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13012",
+      "gameId": 13012,
+      "name": "W-Engine 13012",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_12",
+      "shortDescription": "The W-Engine, with its bright colors and great performance, saw poor sales at first because it resembled a toy. But with its reasonable price, it slowly gained a positive reputation.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13013",
+      "gameId": 13013,
+      "name": "W-Engine 13013",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_13",
+      "shortDescription": "A W-Engine with a grandiose and luxurious appearance equipped with a premium Ether-powered anti-theft device. It's actually used to provide the equipper with energy.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13014",
+      "gameId": 13014,
+      "name": "W-Engine 13014",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_14",
+      "shortDescription": "Designed for those Hollow-dwelling bards who refuse to listen to the same albums repeatedly, this W-Engine comes equipped with a radio module that can transform Etheric frequencies into melodies.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13015",
+      "gameId": 13015,
+      "name": "W-Engine 13015",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_15",
+      "shortDescription": "Gather 'round, mortals! Turn up the music!",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13016",
+      "gameId": 13016,
+      "name": "W-Engine 13016",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_16",
+      "shortDescription": "Clearly a W-Engine is for sound, and not images. What kind of lunatic genius would insist on stuffing a 16mm film camera into a W-Engine?",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13019",
+      "gameId": 13019,
+      "name": "W-Engine 13019",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_Common_19",
+      "shortDescription": "Countless threads of Sword Will echo through this tiny stretch of sky.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13101",
+      "gameId": 13101,
+      "name": "W-Engine 13101",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1011",
+      "shortDescription": "A customized W-Engine that focuses on energy storage, modified to improve its energy capacity. This model is often used by Anby.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13103",
+      "gameId": 13103,
+      "name": "W-Engine 13103",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1031",
+      "shortDescription": "A cost-effective W-Engine that can store energy, with improvements made to its internal space. This model is often used by Nicole.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13106",
+      "gameId": 13106,
+      "name": "W-Engine 13106",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1061",
+      "shortDescription": "An enhanced W-Engine with a high rotation speed. A chainsaw has been integrated into its shaft. This model is often used by Corin.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13108",
+      "gameId": 13108,
+      "name": "W-Engine 13108",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1081",
+      "shortDescription": "A customized supercomputing W-Engine, specialized in aim support and ballistic calculations. Modified by Billy, it now looks like some sort of knock-off Starlight Knight figurine.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13111",
+      "gameId": 13111,
+      "name": "W-Engine 13111",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1111",
+      "shortDescription": "Originally a rev-enhanced W-Engine, it has been modified by Anton with the most expensive rotary drill parts that allow it to exceed its output limits.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13112",
+      "gameId": 13112,
+      "name": "W-Engine 13112",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1121",
+      "shortDescription": "A powerful protection-type W-Engine, characterized by thick oil cylinders that ceaselessly roar inside it. It can provide sufficient power for heavy machinery.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13113",
+      "gameId": 13113,
+      "name": "W-Engine 13113",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1131",
+      "shortDescription": "An intricate W-Engine developed by Section 6 and later modified with extra features. It can control Ether particles to form an energy field. This model is favored by Soukaku.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13115",
+      "gameId": 13115,
+      "name": "W-Engine 13115",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1151",
+      "shortDescription": "A support W-Engine propelled by jets that is both mobile and impactful, it can traverse the entire battlefield providing combat buffs.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13127",
+      "gameId": 13127,
+      "name": "W-Engine 13127",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1271",
+      "shortDescription": "A defensive W-Engine independently researched and created by Public Security which simplifies the offensive components to enhance the energy conversion ability in its shield. ",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13128",
+      "gameId": 13128,
+      "name": "W-Engine 13128",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1281",
+      "shortDescription": "An energy W-Engine modded from spare parts of a truck's engine. It converts the original cylinder into an energy storage unit, which is highly advantageous.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13135",
+      "gameId": 13135,
+      "name": "W-Engine 13135",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1351",
+      "shortDescription": "An energy W-Engine modded from spare parts of a truck's engine. It converts the original cylinder into an energy storage unit, which is highly advantageous.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13142",
+      "gameId": 13142,
+      "name": "W-Engine 13142",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1421",
+      "shortDescription": "Pressing acupoints is like cooking. Striking the fatal acupoint is like setting the stove on fire, bringing disaster.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_13144",
+      "gameId": 13144,
+      "name": "W-Engine 13144",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_A_1441",
+      "shortDescription": "A flame both fierce and faithful, burning without end.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14001",
+      "gameId": 14001,
+      "name": "W-Engine 14001",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_Common_01",
+      "shortDescription": "A high-performance supercomputing W-Engine, capable of collecting real-time battlefield data and equipped with mini cannons.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14002",
+      "gameId": 14002,
+      "name": "W-Engine 14002",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_Common_02",
+      "shortDescription": "A new supercomputing W-Engine, featuring cutting-edge integrated chips that dynamically monitor the battlefield and provide tactical analysis for the user.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14003",
+      "gameId": 14003,
+      "name": "W-Engine 14003",
+      "rarity": "B",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_Common_03",
+      "shortDescription": "A special W-Engine modeled after a revolver. It can load bullet-shaped condensed Ether batteries, which release a great amount of power when fired.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14102",
+      "gameId": 14102,
+      "name": "W-Engine 14102",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1021",
+      "shortDescription": "A supercomputing W-Engine equipped with a motion monitoring feature. Thanks to Nekomata's modifications, it perfectly matches the fast reflexes and combat maneuvers of feline Thirens.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14104",
+      "gameId": 14104,
+      "name": "W-Engine 14104",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1041",
+      "shortDescription": "A W-Engine made for Soldier 11 by Obsidian Division. Its intense heat can be used to clear the entire battlefield.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14105",
+      "gameId": 14105,
+      "name": "W-Engine 14105",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1051",
+      "shortDescription": "In chasing illusions, she was entranced by the light that pierced through the mist.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14107",
+      "gameId": 14107,
+      "name": "W-Engine 14107",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1071",
+      "shortDescription": "A versatile W-Engine based on a motorcycle tire that Big Daddy made for Caesar.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14109",
+      "gameId": 14109,
+      "name": "W-Engine 14109",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1091",
+      "shortDescription": "Hail falls before the shrine, waking her. The blizzard is coming.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14110",
+      "gameId": 14110,
+      "name": "W-Engine 14110",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1101",
+      "shortDescription": "A functional W-Engine with ultra-high power capacity. Modified by Koleda, its energy level has almost exceeded the safety limit.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14114",
+      "gameId": 14114,
+      "name": "W-Engine 14114",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1141",
+      "shortDescription": "A special W-Engine with a powerful temperature control system. Modified by Lycaon, it has the capability to quickly create extremely cold environments.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14116",
+      "gameId": 14116,
+      "name": "W-Engine 14116",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1161",
+      "shortDescription": "A violent W-Engine that can ignite flames with a siphon. It deals simple and crude burn damage, encouraging relentless, bone-crushing follow-up attacks.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14117",
+      "gameId": 14117,
+      "name": "W-Engine 14117",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1171",
+      "shortDescription": "Modified by Burnice, this W-Engine uses a special fuel as its power source to boost combustion performance to the max.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14118",
+      "gameId": 14118,
+      "name": "W-Engine 14118",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1181",
+      "shortDescription": "The latest W-Engine that possesses a hypercalculation core. It can compile operational codes for machines at top speed. This model is favored by Grace.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14119",
+      "gameId": 14119,
+      "name": "W-Engine 14119",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1191",
+      "shortDescription": "A high-power W-Engine that possesses efficient freezing capabilities and high damage output. This model is often used by Ellen.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14120",
+      "gameId": 14120,
+      "name": "W-Engine 14120",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1201",
+      "shortDescription": "Bitterness and pain beget hope, and he devours them all.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14121",
+      "gameId": 14121,
+      "name": "W-Engine 14121",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1211",
+      "shortDescription": "A special W-Engine with multiple layers embedded inside. It can quickly recharge \tspecial-model Bangboo and custom-made combat equipment. This model is favored by Rina.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14122",
+      "gameId": 14122,
+      "name": "W-Engine 14122",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1221",
+      "shortDescription": "A new model of supercomputing W-Engine custom-made by HSO Section 6, equipped with the most elite calculation and analysis functions.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14124",
+      "gameId": 14124,
+      "name": "W-Engine 14124",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1241",
+      "shortDescription": "The latest tactical W-Engine used by Public Security's elite Hollow squads, possessing a powerful Ether energy source. It's Zhu Yuan's favored model.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14125",
+      "gameId": 14125,
+      "name": "W-Engine 14125",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1251",
+      "shortDescription": "A custom stun W-Engine made for an Automaton referencing the combat style and abilities of one. Energy is stored within, then lashes outwards upon conversion.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14126",
+      "gameId": 14126,
+      "name": "W-Engine 14126",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1261",
+      "shortDescription": "A deadly W-Engine from unknown sources, modified personally by Jane Doe with the intent to deal severe physical damage and Anomaly.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14129",
+      "gameId": 14129,
+      "name": "W-Engine 14129",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1291",
+      "shortDescription": "Shadowed by darkness at every step, he laid bare his heart to kindle a single, flickering flame.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14130",
+      "gameId": 14130,
+      "name": "W-Engine 14130",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1301",
+      "shortDescription": "She lingers by the banks of the Styx, waiting for the tide to extinguish the fury burning in her chamber.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14131",
+      "gameId": 14131,
+      "name": "W-Engine 14131",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1311",
+      "shortDescription": "Underneath the radiant splendor, her genuine self has never been hidden.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14132",
+      "gameId": 14132,
+      "name": "W-Engine 14132",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1321",
+      "shortDescription": "The sound of the strings, sharp as blades, cut through the night, protecting the one.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14133",
+      "gameId": 14133,
+      "name": "W-Engine 14133",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1331",
+      "shortDescription": "A bird landed on the windowsill, scattering starlight from its tail feathers.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14134",
+      "gameId": 14134,
+      "name": "W-Engine 14134",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1341",
+      "shortDescription": "Not too sweet, and not too cold.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14136",
+      "gameId": 14136,
+      "name": "W-Engine 14136",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1361",
+      "shortDescription": "Broken eyes hold both resilience and vulnerability.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14137",
+      "gameId": 14137,
+      "name": "W-Engine 14137",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1371",
+      "shortDescription": "The world is vast and full of change, and fate is unpredictable. But regardless of hardship or lack thereof, one must stay true to one's heart.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14138",
+      "gameId": 14138,
+      "name": "W-Engine 14138",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1381",
+      "shortDescription": "The sheen of silver is not innocence. Can the blades of the past cut through fate's connections?",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14139",
+      "gameId": 14139,
+      "name": "W-Engine 14139",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1391",
+      "shortDescription": "The warm fire blazes through the long night, casting light on the tiger's roar in my heart.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14140",
+      "gameId": 14140,
+      "name": "W-Engine 14140",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1401",
+      "shortDescription": "Starlight became her blade, and she held courage and love firmly in her hands.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14141",
+      "gameId": 14141,
+      "name": "W-Engine 14141",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1411",
+      "shortDescription": "A masterfully crafted design, infused with the creator's pursuit of beauty.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14143",
+      "gameId": 14143,
+      "name": "W-Engine 14143",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1431",
+      "shortDescription": "The world may change, but my heart remains constant, like clouds standing eternal.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14145",
+      "gameId": 14145,
+      "name": "W-Engine 14145",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1451",
+      "shortDescription": "After countless years, it remains a silent puzzle.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14146",
+      "gameId": 14146,
+      "name": "W-Engine 14146",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1461",
+      "shortDescription": "Her journey continues along the long, endless circle.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14147",
+      "gameId": 14147,
+      "name": "W-Engine 14147",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1471",
+      "shortDescription": "The purging flames burned a hundred times, yet never cleansed me.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14148",
+      "gameId": 14148,
+      "name": "W-Engine 14148",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1481",
+      "shortDescription": "That call you never picked up... she's the one who answered it.",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14149",
+      "gameId": 14149,
+      "name": "W-Engine 14149",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1491",
+      "shortDescription": "...",
+      "tags": []
+    },
+    {
+      "weaponId": "weapon_14150",
+      "gameId": 14150,
+      "name": "W-Engine 14150",
+      "rarity": "A",
+      "role": "UNKNOWN",
+      "iconKey": "Weapon_S_1501",
+      "shortDescription": "...",
+      "tags": []
+    }
+  ]
+}
