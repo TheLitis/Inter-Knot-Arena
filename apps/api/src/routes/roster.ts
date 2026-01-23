@@ -3,7 +3,7 @@ import type { Repository } from "../repository/types.js";
 import type { CatalogStore } from "../catalog/store.js";
 import type { CacheClient } from "../cache/types.js";
 import type { PlayerAgentStateStore } from "../roster/types.js";
-import { computeEligibility } from "@ika/shared";
+import { computeEligibility, mergePlayerAgentDynamicAccumulative } from "@ika/shared";
 import type {
   PlayerRosterImportSummary,
   PlayerRosterView,
@@ -19,6 +19,9 @@ function sendError(reply: { code: (status: number) => { send: (payload: unknown)
 
 const REGIONS: Region[] = ["NA", "EU", "ASIA", "SEA", "OTHER"];
 const rateLimitMap = new Map<string, number>();
+const accumulativeEnabled = process.env.ENABLE_ACCUMULATIVE_IMPORT === "true";
+const storeRawEnka = process.env.ENKA_STORE_RAW === "true";
+const rawEnkaTtlSeconds = Number(process.env.ENKA_RAW_TTL_SEC ?? 60 * 60 * 24 * 14);
 
 function validateUid(uid: string): boolean {
   return /^\d{6,12}$/.test(uid);
@@ -195,7 +198,71 @@ export async function registerRosterRoutes(
       };
 
       if (agents.length > 0) {
-        await rosterStore.upsertStates(uid, region, agents);
+        if (accumulativeEnabled) {
+          const existingStates = await rosterStore.listStates(uid, region);
+          const existingMap = new Map(existingStates.map((state) => [state.agentId, state]));
+          let newAgentsCount = 0;
+          let updatedAgentsCount = 0;
+          let unchangedCount = 0;
+
+          const merged = agents.map((incoming) => {
+            const existing = existingMap.get(incoming.agentId);
+            const incomingWithFlags = {
+              ...incoming,
+              owned: true,
+              lastImportedAt: fetchedAt,
+              lastShowcaseSeenAt: fetchedAt,
+              updatedAt: fetchedAt
+            };
+            const mergedState = mergePlayerAgentDynamicAccumulative(existing, incomingWithFlags);
+
+            if (!existing) {
+              newAgentsCount += 1;
+            } else {
+              const strip = (state: Record<string, unknown>) => {
+                const clone = { ...state };
+                delete clone.lastImportedAt;
+                delete clone.lastShowcaseSeenAt;
+                delete clone.updatedAt;
+                return clone;
+              };
+              const existingComparable = JSON.stringify(strip(existing as Record<string, unknown>));
+              const mergedComparable = JSON.stringify(strip(mergedState as Record<string, unknown>));
+              if (existingComparable === mergedComparable) {
+                unchangedCount += 1;
+              } else {
+                updatedAgentsCount += 1;
+              }
+            }
+            return mergedState;
+          });
+
+          summary.newAgentsCount = newAgentsCount;
+          summary.updatedAgentsCount = updatedAgentsCount;
+          summary.unchangedCount = unchangedCount;
+          summary.ttlSeconds = storeRawEnka ? rawEnkaTtlSeconds : 0;
+
+          await rosterStore.upsertStates(uid, region, merged, { mergeStrategy: "DIRECT" });
+
+          const showcaseAgentIds = [
+            ...merged.map((item) => String(item.agentGameId ?? item.agentId)),
+            ...unknownIds
+              .filter((id) => id.startsWith("character:"))
+              .map((id) => id.split(":")[1])
+          ];
+
+          await rosterStore.saveSnapshot({
+            snapshotId: `snap_${uid}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            uid,
+            region,
+            fetchedAt,
+            showcaseAgentIds,
+            rawEnkaJson: storeRawEnka ? payload : undefined,
+            ttlSeconds: storeRawEnka ? rawEnkaTtlSeconds : 0
+          });
+        } else {
+          await rosterStore.upsertStates(uid, region, agents);
+        }
       }
       await rosterStore.saveImportSummary(uid, region, summary);
 
