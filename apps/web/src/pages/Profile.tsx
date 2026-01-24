@@ -110,6 +110,23 @@ function initialsForName(name: string) {
     .toUpperCase();
 }
 
+function roleBadgeClass(role: string) {
+  if (role === "ADMIN") {
+    return "border border-[#FF3B30]/40 bg-[#FF3B30]/10 text-[#FF3B30]";
+  }
+  if (role === "STAFF" || role === "MODER") {
+    return "border border-[#FF7A1A]/40 bg-[#FF7A1A]/10 text-[#FF7A1A]";
+  }
+  return "border border-border bg-ika-700/70 text-ink-700";
+}
+
+function roleLabel(role: string) {
+  if (role === "ADMIN") return "Admin";
+  if (role === "STAFF") return "Staff";
+  if (role === "MODER") return "Moder";
+  return role;
+}
+
 export default function Profile() {
   const { id } = useParams();
   const { user, isLoading: authLoading } = useAuth();
@@ -348,8 +365,8 @@ export default function Profile() {
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {profileUser?.roles.map((role) => (
-                    <Badge key={role} className="border border-border bg-ika-700/70 text-ink-700">
-                      {role}
+                    <Badge key={role} className={roleBadgeClass(role)}>
+                      {roleLabel(role)}
                     </Badge>
                   ))}
                 </div>
