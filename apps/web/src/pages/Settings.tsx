@@ -21,6 +21,23 @@ interface ToastState {
 
 type SaveState = "idle" | "saving" | "saved";
 
+function roleBadgeClass(role: string) {
+  if (role === "ADMIN") {
+    return "border border-[#FF3B30]/40 bg-[#FF3B30]/10 text-[#FF3B30]";
+  }
+  if (role === "STAFF" || role === "MODER") {
+    return "border border-[#FF7A1A]/40 bg-[#FF7A1A]/10 text-[#FF7A1A]";
+  }
+  return "border border-border bg-ika-700/70 text-ink-700";
+}
+
+function roleLabel(role: string) {
+  if (role === "ADMIN") return "Admin";
+  if (role === "STAFF") return "Staff";
+  if (role === "MODER") return "Moder";
+  return role;
+}
+
 export default function Settings() {
   const { user, isLoading, setUser, logout } = useAuth();
   const [displayName, setDisplayName] = useState("");
@@ -300,8 +317,8 @@ export default function Settings() {
               <div className="text-xs uppercase tracking-[0.2em] text-ink-500">Roles</div>
               <div className="mt-2 flex flex-wrap gap-2">
                 {user.roles.map((role) => (
-                  <Badge key={role} className="border border-border bg-ika-700/70 text-ink-700">
-                    {role}
+                  <Badge key={role} className={roleBadgeClass(role)}>
+                    {roleLabel(role)}
                   </Badge>
                 ))}
               </div>
