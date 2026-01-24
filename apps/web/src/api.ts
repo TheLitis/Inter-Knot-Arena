@@ -316,6 +316,22 @@ export async function updateMe(payload: {
   return patchJsonWithCredentials<User>("/users/me", payload);
 }
 
+export async function submitUidVerification(payload: {
+  uid: string;
+  region: string;
+}): Promise<{ code: string; status: string }> {
+  return postJsonWithCredentials<{ code: string; status: string }>("/identity/uid/submit", payload);
+}
+
+export async function verifyUidProof(payload: {
+  uid: string;
+  region: string;
+  code: string;
+  proofUrl?: string;
+}): Promise<User> {
+  return postJsonWithCredentials<User>("/identity/uid/verify-proof", payload);
+}
+
 export function fetchAgentCatalog(): Promise<AgentCatalog> {
   return safeFetch<AgentCatalog>("/catalog/agents", { catalogVersion: "unknown", agents: [] });
 }
