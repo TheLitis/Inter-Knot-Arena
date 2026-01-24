@@ -6,6 +6,7 @@ import { createRepository } from "./repository/index.js";
 import { createStorage } from "./storage/index.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerUserRoutes } from "./routes/users.js";
+import { registerIdentityRoutes } from "./routes/identity.js";
 import { createAuthContext } from "./auth/context.js";
 import { getFeatureFlags } from "./featureFlags.js";
 import { createCatalogStore } from "./catalog/store.js";
@@ -28,6 +29,7 @@ const auth = createAuthContext();
 const flags = getFeatureFlags();
 await registerAuthRoutes(app, repo, auth);
 await registerUserRoutes(app, repo, auth);
+await registerIdentityRoutes(app, repo, auth);
 await registerRoutes(app, repo, storage);
 
 if (flags.enableAgentCatalog || flags.enableEnkaImport) {
