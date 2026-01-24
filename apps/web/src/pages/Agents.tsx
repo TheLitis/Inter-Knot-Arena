@@ -177,7 +177,7 @@ export default function Agents() {
             Чтобы хранить список агентов, сначала привяжи UID.
           </p>
           <Button className="mt-4" asChild>
-            <a href="/uid">Верифицировать UID</a>
+            <a href="/uid-verify">Верифицировать UID</a>
           </Button>
         </div>
       </div>
