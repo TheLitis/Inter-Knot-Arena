@@ -27,8 +27,8 @@ const reviewItems: WorkQueueItem[] = Array.from({ length: 8 }).map((_, index) =>
   league: index % 2 === 0 ? "Standard" : "F2P",
   createdAt: "2h ago",
   updatedAt: "30m ago",
-  status: index % 3 === 0 - "IN_REVIEW" : "NEW",
-  assignee: index % 3 === 0 - "moder_kris" : undefined
+  status: index % 3 === 0 ? "IN_REVIEW" : "NEW",
+  assignee: index % 3 === 0 ? "moder_kris" : undefined
 }));
 
 const disputeItems: WorkQueueItem[] = Array.from({ length: 5 }).map((_, index) => ({
