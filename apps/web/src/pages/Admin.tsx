@@ -37,8 +37,8 @@ const disputeItems: WorkQueueItem[] = Array.from({ length: 5 }).map((_, index) =
   league: "Standard",
   createdAt: "1d ago",
   updatedAt: "4h ago",
-  status: index % 2 === 0 - "OPEN" : "ESCALATED",
-  assignee: index % 2 === 0 - "staff_zoe" : undefined
+  status: index % 2 === 0 ? "OPEN" : "ESCALATED",
+  assignee: index % 2 === 0 ? "staff_zoe" : undefined
 }));
 
 const reportItems: WorkQueueItem[] = Array.from({ length: 3 }).map((_, index) => ({
