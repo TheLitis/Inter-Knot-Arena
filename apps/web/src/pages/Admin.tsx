@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, Cloud, Flag, RefreshCw, Shield } from "lucide-react";
 import { AdminHeader, type AdminRole } from "../components/admin/AdminHeader";
 import { OpsMetricCard } from "../components/admin/OpsMetricCard";
@@ -16,9 +16,9 @@ import { featureFlags as appFlags } from "../flags";
 import type { Dispute } from "@ika/shared";
 
 const mockQueues = [
-  { name: "Standard", status: "OPEN", inQueue: 14, avgWait: "2–4 min" },
-  { name: "F2P", status: "OPEN", inQueue: 9, avgWait: "3–6 min" },
-  { name: "Unlimited", status: "OPEN", inQueue: 3, avgWait: "1–3 min" }
+  { name: "Standard", status: "OPEN", inQueue: 14, avgWait: "2-4 min" },
+  { name: "F2P", status: "OPEN", inQueue: 9, avgWait: "3-6 min" },
+  { name: "Unlimited", status: "OPEN", inQueue: 3, avgWait: "1-3 min" }
 ];
 
 const reviewItems: WorkQueueItem[] = Array.from({ length: 8 }).map((_, index) => ({
@@ -161,7 +161,7 @@ export default function Admin() {
   const queueSummary = useMemo(() => {
     return queueStats
       .map((queue) => `${queue.name}: ${queue.inQueue} (${queue.avgWait})`)
-      .join(" · ");
+      .join(" | ");
   }, [queueStats]);
 
   const flagList = [
@@ -175,8 +175,8 @@ export default function Admin() {
   const enkaErrors = 3;
   const openQueues = queueStats.filter((queue) => queue.status === "OPEN").length;
   const catalogSummary = catalogVersion
-    ? `agents v${catalogVersion} · weapons local · discs local`
-    : "agents v? · weapons local · discs local";
+    ? `agents v${catalogVersion} | weapons local | discs local`
+    : "agents v? | weapons local | discs local";
   const catalogValue = catalogVersion ? `v${catalogVersion}` : "local";
 
   useEffect(() => {
@@ -249,7 +249,7 @@ export default function Admin() {
       />
 
       <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        {loading - (
+        {loading ? (
           Array.from({ length: 8 }).map((_, index) => (
             <Skeleton key={index} className="h-24" />
           ))
